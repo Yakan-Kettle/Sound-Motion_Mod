@@ -54,7 +54,7 @@ float volume = 1.0;
 PImage img;
 
 void setup(){
-  size(screen, screen);
+  size(900, 900);
 }
 
 void mousePressed() {
@@ -347,5 +347,3 @@ void setWave() {
     volume = 1;
   } 
 }
-
-
