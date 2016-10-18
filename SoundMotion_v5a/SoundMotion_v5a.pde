@@ -1,6 +1,6 @@
 import KinectPV2.KJoint;
 import KinectPV2.*;
-import ddf.minim.*;
+import processing.sound.*;
 
 int dx = 7;     //タイムコードの速さ
 int weight = 5; //タイムコードの太さ
@@ -13,9 +13,9 @@ KinectPV2 kinect;
 ArrayList<Body> bodys = new ArrayList<Body>();  //kinectの最大人数が6人のはず
 
 //オーディオをぶち込むリスト等
-Minim minim;
-AudioPlayer player;
-ArrayList<AudioPlayer> wavs = new ArrayList<AudioPlayer>();
+//Minim minim;
+SoundFile player; // = AudioPlayer player;?
+ArrayList<SoundFile> wavs = new ArrayList<SoundFile>(); // = ArrayList<AudioPlayer> wavs = new ArrayList<AudioPlayer>();
 
 ArrayList<Note> notes = new ArrayList<Note>();
 
@@ -201,58 +201,58 @@ void checkHit(int _x) {  //タイムコード(？)がパネルを通過したか
 
 void playSound(float _y) {
   if(_y < 0){
-    wavs.get(0).rewind();
+    //wavs.get(0).rewind();
     wavs.get(0).play();
   } else if (_y/(1080/20) > 19) {
-    wavs.get(19).rewind();
+    //wavs.get(19).rewind();
     wavs.get(19).play();
   } else {
-    wavs.get((int)_y/(1080/20)).rewind();
+    //wavs.get((int)_y/(1080/20)).rewind();
     wavs.get((int)_y/(1080/20)).play();
   }
 }
 
 
 void audioInit(){
-  minim = new Minim(this);  //オーディオリストの生成
-  player = minim.loadFile("C5la.wav");
+  //minim = new Minim(this);  //オーディオリストの生成
+  player = new SoundFile(this, "C5la.wav"); // = player = minim.loadFile("C5la.wav");, 以下略
   wavs.add(player);
-  player = minim.loadFile("C5so.wav");
+  player = new SoundFile(this, "C5so.wav");
   wavs.add(player);
-  player = minim.loadFile("C5fa.wav");
+  player = new SoundFile(this, "C5fa.wav");
   wavs.add(player);
-  player = minim.loadFile("C5mi.wav");
+  player = new SoundFile(this, "C5mi.wav");
   wavs.add(player);
-  player = minim.loadFile("C5re.wav");
+  player = new SoundFile(this, "C5re.wav");
   wavs.add(player);
-  player = minim.loadFile("C5do.wav");
+  player = new SoundFile(this, "C5do.wav");
   wavs.add(player);
-  player = minim.loadFile("C4ti.wav");
+  player = new SoundFile(this, "C4ti.wav");
   wavs.add(player);
-  player = minim.loadFile("C4la.wav");
+  player = new SoundFile(this, "C4la.wav");
   wavs.add(player);
-  player = minim.loadFile("C4so.wav");
+  player = new SoundFile(this, "C4so.wav");
   wavs.add(player);
-  player = minim.loadFile("C4fa.wav");
+  player = new SoundFile(this, "C4fa.wav");
   wavs.add(player);
-  player = minim.loadFile("C4mi.wav");
+  player = new SoundFile(this, "C4mi.wav");
   wavs.add(player);
-  player = minim.loadFile("C4re.wav");
+  player = new SoundFile(this, "C4re.wav");
   wavs.add(player);
-  player = minim.loadFile("C4do.wav");
+  player = new SoundFile(this, "C4do.wav");
   wavs.add(player);
-  player = minim.loadFile("C3ti.wav");
+  player = new SoundFile(this, "C3ti.wav");
   wavs.add(player);
-  player = minim.loadFile("C3la.wav");
+  player = new SoundFile(this, "C3la.wav");
   wavs.add(player);
-  player = minim.loadFile("C3so.wav");
+  player = new SoundFile(this, "C3so.wav");
   wavs.add(player);
-  player = minim.loadFile("C3fa.wav");
+  player = new SoundFile(this, "C3fa.wav");
   wavs.add(player);
-  player = minim.loadFile("C3mi.wav");
+  player = new SoundFile(this, "C3mi.wav");
   wavs.add(player);
-  player = minim.loadFile("C3re.wav");
+  player = new SoundFile(this, "C3re.wav");
   wavs.add(player);
-  player = minim.loadFile("C3do.wav");
+  player = new SoundFile(this, "C3do.wav");
   wavs.add(player);
 }
