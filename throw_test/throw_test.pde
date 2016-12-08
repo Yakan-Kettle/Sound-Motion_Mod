@@ -1,13 +1,10 @@
-int i = 0;  //
+int i = 0;  //カウンター
 int r = 50; //ボールの半径
 int t = 5; //変位の基本定数
 int tx = 0; //ボールのx変位
 int ty = 0; //ボールのy変位
 int x = 0; //ボールのx座標
 int y = 0; //ボールのy座標
-
-int dx = 0;
-int dy = 0;
 
 int pos = 0; //現在のボールの中心座標を一瞬記録する
 ArrayList<Integer> temp = new ArrayList<Integer>();  //ボールの中心座標を保持する配列
@@ -58,14 +55,14 @@ void ballAction(boolean trigger) {
     x = mouseX;
     y = mouseY;
     
-    pos = 1000*x + y;
+    pos = 1000*x + y;  //ボールの中心座標をひとつの数で記憶する魔法（？）
     temp.add(pos);
     
   } else {
     background(0); //背景塗りつぶし
     
-    tx = temp.get(0)/1000 - temp.get(1)/1000;
-    ty = temp.get(0)%1000 - temp.get(1)%1000;
+    tx = temp.get(0)/1000 - temp.get(1)/1000;  //posからx座標の成分を抜き出してx変位を計算
+    ty = temp.get(0)%1000 - temp.get(1)%1000;  //posからy座標の成分を抜き出してy変位を計算
     
     x -= tx;
     y -= ty;
@@ -80,7 +77,3 @@ void fade() {
   rectMode(CORNER);
   rect(0, 0, width, height);
 }
-
-//temp = 1000x + y;
-//int dx = x / 1000;
-//int dy = y % 1000;
