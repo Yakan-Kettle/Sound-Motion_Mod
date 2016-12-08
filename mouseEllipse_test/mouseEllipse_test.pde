@@ -9,7 +9,7 @@ boolean trigger = false; //ballActionのモード切り替えスイッチ
 
 void setup() {
   background(0);
-  frameRate(60);
+  frameRate(30);
   size(800, 640); //width = 800px, height = 640px;
   
   //ボールの初期座標をセット
