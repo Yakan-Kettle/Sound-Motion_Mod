@@ -46,7 +46,7 @@ void draw() {
 
 float setValue(int a, int b) {
   float X = 0;
-  while (abs(X) <= 5) X = random(a, b); //0がセットされないように頑張ってくれるはず
+  while (abs(X) <= 5) X = random(a, b); //5以上がセットされないように頑張ってくれるはず
   return X;
 }
 
@@ -61,7 +61,7 @@ void ballDrift() {
   x += tx;
   y += ty;
 
-  //壁にぶつかったら変位を逆転させる
+  //壁にぶつかったら変位を逆転させ、最小速度より大きい速度の場合は減速させる
   if (x+r > width){
     if(tx < mintx) tx = mintx;
     if(tx > mintx) tx *= 0.9;
