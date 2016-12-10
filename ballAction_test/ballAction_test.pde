@@ -1,6 +1,8 @@
 int i = 0;  //カウンター
 int r = 50; //ボールの半径
 int t = 10; //変位の基本定数
+int mintx = 5; //ボールのx変位の最小値
+int minty = 5; //ボールのy変位の最小値
 int tx = 0; //ボールのx変位
 int ty = 0; //ボールのy変位
 int x = 0; //ボールのx座標
@@ -44,7 +46,7 @@ void draw() {
 
 float setValue(int a, int b) {
   float X = 0;
-  while (X == 0) X = random(a, b); //0がセットされないように頑張ってくれるはず
+  while (abs(X) <= 5) X = random(a, b); //0がセットされないように頑張ってくれるはず
   return X;
 }
 
@@ -56,15 +58,29 @@ void ballAction(boolean trigger) {
 void ballDrift() {
   background(0); //背景塗りつぶし
 
-  x -= tx;
-  y -= ty;
+  x += tx;
+  y += ty;
 
   //壁にぶつかったら変位を逆転させる
-  if (x+r > width || x-r < 0) {
+  if (x+r > width){
+    if(tx < mintx) tx = mintx;
+    if(tx > mintx) tx *= 0.9;
     tx = -abs(tx);
   }
-  if (y+r > height || y-r < 0) {
+  if(x-r < 0) {
+    if(abs(tx) < abs(mintx)) tx = -mintx;
+    if(abs(tx) > abs(mintx)) tx *= 0.9;
+    tx = abs(tx);
+  }
+  if (y+r > height) {
+    if(ty < minty) ty = minty;
+    if(ty > minty) ty *= 0.9;
     ty = -abs(ty);
+  }
+  if(y-r < 0) {
+    if(abs(ty) < abs(minty)) ty = -minty;
+    if(abs(ty) > abs(minty)) ty *= 0.9;
+    ty = abs(ty);
   }
 }
 
@@ -78,8 +94,8 @@ void ballGrab() {
 
   if (temp.size() >= 3) temp.remove(0);
   temp.add(pos);
-  tx = temp.get(0)/1000 - temp.get(1)/1000;  //posからx座標の成分を抜き出してx変位を計算
-  ty = temp.get(0)%1000 - temp.get(1)%1000;  //posからy座標の成分を抜き出してy変位を計算
+  tx = temp.get(1)/1000 - temp.get(0)/1000;  //posからx座標の成分を抜き出してx変位を計算
+  ty = temp.get(1)%1000 - temp.get(0)%1000;  //posからy座標の成分を抜き出してy変位を計算
 }
 
 void fade() {
