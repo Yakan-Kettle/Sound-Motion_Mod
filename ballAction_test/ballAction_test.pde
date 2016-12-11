@@ -1,3 +1,7 @@
+int colorData = 0;  //色のRGB情報を保持する
+int R = 0;
+int G = 0;
+int B = 0;
 int i = 0;  //カウンター
 int r = 50; //ボールの半径
 int t = 10; //変位の基本定数
@@ -159,29 +163,50 @@ void simpleEffect(boolean _trigger) {
     float rwid = 2*random(15, 25);
 
     //alpha *= 0.5;
-    fill(255, 255, 0, alpha); //中心の円の色
+    setColor();
+    calcColor();
+    fill(R, G, B, alpha); //中心の円の色
     ellipse(x, y, 2*r, 2*r);  //中心の円
 
-    if (rcol > 0.5) fill(255, 128, 0, alpha); //周囲の小円の色
-    else fill(255, 255, 0, alpha);           //当確率でバラつくようになっている
+    if (rcol < 1) fill(R*0.5, G*0.5, B    , alpha); //周囲の小円の色
+    if (rcol < 0.75) fill(R    , G*0.5, B*0.5, alpha); //周囲の小円の色
+    if (rcol < 0.50) fill(R*0.5, G    , B*0.5, alpha); //周囲の小円の色
+    if (rcol < 0.25) fill(R, G, B, alpha);           //当確率でバラつくようになっている
     ellipse(x + rdx, y + rdy, rwid, rwid);  //周囲の小円.描画位置が確率で変動する.
 
-    //noFill();
-    //stroke(200, alpha);
-    //strokeWeight(1);
-    //ellipse(x, y, r+elwid, r+elwid);  //徐々に広がる灰色の円
+    noFill();
+    stroke(200, alpha);
+    strokeWeight(1);
+    ellipse(x, y, r+elwid, r+elwid);  //徐々に広がる灰色の円
 
-    //reload();
+    reload();
     //if (notes.get(i).getAlfa() <= 0) notes.remove(notes.get(i)); //一応メモリ解放はしてるっぽい？
     noFill();
   } else {
-    alpha = 200;
+    //alpha = 200;
     elwid = 10;
   }
 }
 
+void setColor() {  //色は上から順番に上がっていく感じ（）
+  colorData = 255000000;  //赤
+  if (y < height * 0.125 * 7) colorData = 255000255;  //紫
+  if (y < height * 0.125 * 6) colorData =       255;  //青
+  if (y < height * 0.125 * 5) colorData =    255255;  //水
+  if (y < height * 0.125 * 4) colorData =    255000;  //緑
+  if (y < height * 0.125 * 3) colorData = 255255000;  //黄
+  if (y < height * 0.125 * 2) colorData = 255128000;  //橙
+  if (y < height * 0.125) colorData = 255000000;  //赤
+}  //処理の順番はこうじゃないとダメです
+
+void calcColor() {
+  R = ceil(colorData * 0.000001);
+  G = ceil(colorData * 0.01);
+  G = ceil(G % 1000);
+  B = ceil(colorData % 1000);
+}
 
 void reload() {
-  alpha -= 2;
-  elwid += 2;
+  //alpha -= 2;
+  elwid += 100;
 }
