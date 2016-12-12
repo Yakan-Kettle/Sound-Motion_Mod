@@ -37,8 +37,8 @@ ArrayList<Note> notes = new ArrayList<Note>();
 boolean trigger = false; //ballActionのモード切り替えスイッチ
 
 void setup() {
-  //fullScreen(2);  //size()とケンカするので片方だけ宣言しよう
-  size(800, 640); //width = 800px, height = 640px;
+  fullScreen();  //size()とケンカするので片方だけ宣言しよう
+  //size(800, 640); //width = 800px, height = 640px;
   background(0);
   frameRate(30);
 
