@@ -32,15 +32,20 @@ int[][] colorData = {  //色情報
 };
 
 int pos = 0; //現在のボールの中心座標を一瞬記録する
-ArrayList<Integer> temp = new ArrayList<Integer>();  //ボールの中心座標を保持する配列
-ArrayList<Note> notes = new ArrayList<Note>();
+ArrayList<Integer> temp;  //ボールの中心座標を保持する配列
+ArrayList<Note> notes;
 boolean trigger = false; //ballActionのモード切り替えスイッチ
 
 SoundFile player; // = AudioPlayer player;?
-ArrayList<SoundFile> wavs = new ArrayList<SoundFile>(); // = ArrayList<AudioPlayer> wavs = new ArrayList<AudioPlayer>();
-
+ArrayList<SoundFile> piano;  // = ArrayList<AudioPlayer> piano = new ArrayList<AudioPlayer>();
+ArrayList<SoundFile> drums;
 
 void setup() {
+  temp = new ArrayList<Integer>();
+  notes = new ArrayList<Note>();
+  piano = new ArrayList<SoundFile>(); 
+  drums = new ArrayList<SoundFile>();
+  
   //fullScreen();  //size()とケンカするので片方だけ宣言しよう
   size(800, 640); //width = 800px, height = 640px;
   background(0);
@@ -100,25 +105,29 @@ void ballDrift() {
   y += ty;
 
   //壁にぶつかったら変位を逆転させ、最小速度より大きい速度の場合は減速させる
-  if (x+r > width) {
+  if (x+r > width) {  //右
     if (tx < mintx) tx = mintx;
     if (tx > mintx) tx *= 0.9;
     tx = -abs(tx);
+    drums.get(0).play();
   }
-  if (x-r < 0) {
+  if (x-r < 0) {  //左
     if (abs(tx) < abs(mintx)) tx = -mintx;
     if (abs(tx) > abs(mintx)) tx *= 0.9;
     tx = abs(tx);
+    drums.get(1).play();
   }
-  if (y+r > height) {
+  if (y+r > height) {  //下
     if (ty < minty) ty = minty;
     if (ty > minty) ty *= 0.9;
     ty = -abs(ty);
+    drums.get(2).play();
   }
-  if (y-r < 0) {
+  if (y-r < 0) {  //上
     if (abs(ty) < abs(minty)) ty = -minty;
     if (abs(ty) > abs(minty)) ty *= 0.9;
     ty = abs(ty);
+    drums.get(3).play();
   }
 }
 
@@ -188,7 +197,7 @@ void simpleEffect(boolean _trigger) {
     if(checkScale()) {  //音階が変化したら
       r = 150;  //中心の円を巨大化
       setNote();
-      wavs.get(colorID).play();
+      piano.get(colorID).play();
     }
 
     /*
@@ -261,19 +270,30 @@ void reset() {
 
 void audioInit() {
   player = new SoundFile(this, "C4do.wav");  //ID = 0
-  wavs.add(player);
+  piano.add(player);
   player = new SoundFile(this, "C4re.wav");  //ID = 1
-  wavs.add(player);
+  piano.add(player);
   player = new SoundFile(this, "C4mi.wav");  //ID = 2
-  wavs.add(player);
+  piano.add(player);
   player = new SoundFile(this, "C4fa.wav");  //ID = 3
-  wavs.add(player);
+  piano.add(player);
   player = new SoundFile(this, "C4so.wav");  //ID = 4
-  wavs.add(player);
+  piano.add(player);
   player = new SoundFile(this, "C4la.wav");  //ID = 5
-  wavs.add(player);
+  piano.add(player);
   player = new SoundFile(this, "C4ti.wav");  //ID = 6
-  wavs.add(player);
+  piano.add(player);
   player = new SoundFile(this, "C5do.wav");  //ID = 7
-  wavs.add(player);
+  piano.add(player);
+  
+  player = new SoundFile(this, "tom.wav");  //ID = 0 右
+  drums.add(player);
+  player = new SoundFile(this, "snare.wav");  //ID = 1 左
+  drums.add(player);
+  player = new SoundFile(this, "bassdrum.wav");  //ID = 2 下
+  drums.add(player);
+  player = new SoundFile(this, "cymbal.wav");  //ID = 3 上
+  drums.add(player);
+  /*player = new SoundFile(this, "hat.wav");  //ID = 3 上
+  drums.add(player);*/
 }
