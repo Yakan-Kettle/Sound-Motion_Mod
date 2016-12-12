@@ -260,20 +260,20 @@ void reset() {
 }
 
 void audioInit() {
-  player = new SoundFile(this, "data/C4do.wav");  //ID = 0
+  player = new SoundFile(this, "C4do.wav");  //ID = 0
   wavs.add(player);
-  player = new SoundFile(this, "data/C4re.wav");  //ID = 1
+  player = new SoundFile(this, "C4re.wav");  //ID = 1
   wavs.add(player);
-  player = new SoundFile(this, "data/C4mi.wav");  //ID = 2
+  player = new SoundFile(this, "C4mi.wav");  //ID = 2
   wavs.add(player);
-  player = new SoundFile(this, "data/C4fa.wav");  //ID = 3
+  player = new SoundFile(this, "C4fa.wav");  //ID = 3
   wavs.add(player);
-  player = new SoundFile(this, "data/C4so.wav");  //ID = 4
+  player = new SoundFile(this, "C4so.wav");  //ID = 4
   wavs.add(player);
-  player = new SoundFile(this, "data/C4la.wav");  //ID = 5
+  player = new SoundFile(this, "C4la.wav");  //ID = 5
   wavs.add(player);
-  player = new SoundFile(this, "data/C4ti.wav");  //ID = 6
+  player = new SoundFile(this, "C4ti.wav");  //ID = 6
   wavs.add(player);
-  player = new SoundFile(this, "data/C5do.wav");  //ID = 7
+  player = new SoundFile(this, "C5do.wav");  //ID = 7
   wavs.add(player);
 }
