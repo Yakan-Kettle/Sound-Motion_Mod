@@ -1,3 +1,5 @@
+import processing.sound.*;
+
 int i = 0;  //カウンター
 int r = 50; //ボールの半径
 int t = 10; //変位の基本定数
@@ -16,9 +18,9 @@ int R = 0;
 int G = 0;
 int B = 0;
 */
-int colorID = 0;
-int oldID = 8;
-int[][] colorData = {
+int colorID = 0;  //色情報が入った下記配列を参照するための値
+int oldID = 8;  //色が変化したタイミングを検知するための値
+int[][] colorData = {  //色情報
   {255,   0,   0},
   {255,   0, 255},
   {  0,   0, 255},
@@ -31,14 +33,16 @@ int[][] colorData = {
 
 int pos = 0; //現在のボールの中心座標を一瞬記録する
 ArrayList<Integer> temp = new ArrayList<Integer>();  //ボールの中心座標を保持する配列
-
 ArrayList<Note> notes = new ArrayList<Note>();
-
 boolean trigger = false; //ballActionのモード切り替えスイッチ
 
+SoundFile player; // = AudioPlayer player;?
+ArrayList<SoundFile> wavs = new ArrayList<SoundFile>(); // = ArrayList<AudioPlayer> wavs = new ArrayList<AudioPlayer>();
+
+
 void setup() {
-  fullScreen();  //size()とケンカするので片方だけ宣言しよう
-  //size(800, 640); //width = 800px, height = 640px;
+  //fullScreen();  //size()とケンカするので片方だけ宣言しよう
+  size(800, 640); //width = 800px, height = 640px;
   background(0);
   frameRate(30);
 
@@ -53,7 +57,7 @@ void setup() {
   //ArrayListに初期値をセット
   for (i = 0; i < 2; i++) temp.add(0);
 
-  println(tx, ty); //デバッグ
+  audioInit();  //音声ファイルの取り込み
 }
 
 void draw() {
@@ -182,8 +186,9 @@ void simpleEffect(boolean _trigger) {
     fill(colorData[colorID][0], colorData[colorID][1], colorData[colorID][2], alpha);
     ellipse(x, y, 2*r, 2*r);  //中心の円
     if(checkScale()) {  //音階が変化したら
-      r += 10;  //中心の円を巨大化
+      r = 150;  //中心の円を巨大化
       setNote();
+      wavs.get(colorID).play();
     }
 
     /*
@@ -199,7 +204,7 @@ void simpleEffect(boolean _trigger) {
     
     noFill();
     stroke(200, alpha);
-    strokeWeight(1);
+    strokeWeight(2);
     for (i = 0; i < notes.size(); i++) {
       notes.get(i).setXY(mouseX, mouseY);
       ellipse(notes.get(i).x, notes.get(i).y, r+notes.get(i).elwid, r+notes.get(i).elwid);  //徐々に広がる灰色の円
@@ -215,16 +220,6 @@ void simpleEffect(boolean _trigger) {
 }
 
 void setColor() {  //色は上から順番に上がっていく感じ（）
-  /*
-  colorData = 255000000;  //赤
-  if (y < height * 0.125 * 7) colorData = 255000255;  //紫
-  if (y < height * 0.125 * 6) colorData =       255;  //青
-  if (y < height * 0.125 * 5) colorData =    255255;  //水
-  if (y < height * 0.125 * 4) colorData =    255000;  //緑
-  if (y < height * 0.125 * 3) colorData = 255255000;  //黄
-  if (y < height * 0.125 * 2) colorData = 255128000;  //橙
-  if (y < height * 0.125) colorData = 255000000;  //赤
-  */
   colorID = 0;  //赤
   if (y < height * 0.125 * 7) colorID = 1;  //紫
   if (y < height * 0.125 * 6) colorID = 2;  //青
@@ -234,14 +229,6 @@ void setColor() {  //色は上から順番に上がっていく感じ（）
   if (y < height * 0.125 * 2) colorID = 6;  //橙
   if (y < height * 0.125) colorID = 7;  //赤
 }  //処理の順番はこうじゃないとダメです
-/*
-void calcColor() {
-  R = ceil(colorData * 0.000001);
-  G = ceil(colorData * 0.01);
-  G = ceil(G % 1000);
-  B = ceil(colorData % 1000);
-}
-*/
 
 boolean checkScale() {
   boolean changeScale = false;
@@ -263,10 +250,30 @@ void reload() {
 }
 
 void contract() {
-  if (r > 50) r -= 2;
+  if (r > 50) r *= 0.5;
+  if (r < 50) r = 50;
 }
 
 void reset() {
   //alpha = 200;
   elwid = 10;
+}
+
+void audioInit() {
+  player = new SoundFile(this, "data/C4do.wav");  //ID = 0
+  wavs.add(player);
+  player = new SoundFile(this, "data/C4re.wav");  //ID = 1
+  wavs.add(player);
+  player = new SoundFile(this, "data/C4mi.wav");  //ID = 2
+  wavs.add(player);
+  player = new SoundFile(this, "data/C4fa.wav");  //ID = 3
+  wavs.add(player);
+  player = new SoundFile(this, "data/C4so.wav");  //ID = 4
+  wavs.add(player);
+  player = new SoundFile(this, "data/C4la.wav");  //ID = 5
+  wavs.add(player);
+  player = new SoundFile(this, "data/C4ti.wav");  //ID = 6
+  wavs.add(player);
+  player = new SoundFile(this, "data/C5do.wav");  //ID = 7
+  wavs.add(player);
 }
