@@ -35,10 +35,10 @@ int pos = 0; //現在のボールの中心座標を一瞬記録する
 ArrayList<Integer> temp = new ArrayList<Integer>();  //ボールの中心座標を保持する配列
 ArrayList<Note> notes = new ArrayList<Note>();
 boolean trigger = false; //ballActionのモード切り替えスイッチ
-
+/*
 SoundFile player; // = AudioPlayer player;?
 ArrayList<SoundFile> wavs = new ArrayList<SoundFile>(); // = ArrayList<AudioPlayer> wavs = new ArrayList<AudioPlayer>();
-
+*/
 
 void setup() {
   //fullScreen();  //size()とケンカするので片方だけ宣言しよう
@@ -57,7 +57,7 @@ void setup() {
   //ArrayListに初期値をセット
   for (i = 0; i < 2; i++) temp.add(0);
 
-  audioInit();  //音声ファイルの取り込み
+  //audioInit();  //音声ファイルの取り込み
 }
 
 void draw() {
@@ -188,7 +188,7 @@ void simpleEffect(boolean _trigger) {
     if(checkScale()) {  //音階が変化したら
       r = 150;  //中心の円を巨大化
       setNote();
-      wavs.get(colorID).play();
+      //wavs.get(colorID).play();
     }
 
     /*
@@ -258,7 +258,7 @@ void reset() {
   //alpha = 200;
   elwid = 10;
 }
-
+/*
 void audioInit() {
   player = new SoundFile(this, "data/C4do.wav");  //ID = 0
   wavs.add(player);
@@ -276,4 +276,4 @@ void audioInit() {
   wavs.add(player);
   player = new SoundFile(this, "data/C5do.wav");  //ID = 7
   wavs.add(player);
-}
+}*/
