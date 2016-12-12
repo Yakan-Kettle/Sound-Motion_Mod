@@ -35,7 +35,7 @@ class Note {
 
   void reload() {
     elwid += 100;
-    alfa -= 50;
+    alfa -= 75;
   }
 
   void setX(float _x) {

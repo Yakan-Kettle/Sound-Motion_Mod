@@ -8,7 +8,7 @@ int ty = 0; //ボールのy変位
 int x = 0; //ボールのx座標
 int y = 0; //ボールのy座標
 
-int alpha = 200; //簡易版エフェクトで使う
+int alpha = 150; //簡易版エフェクトで使う
 int elwid = 10;
 /*
 int colorData = 0;  //色のRGB情報を保持する
