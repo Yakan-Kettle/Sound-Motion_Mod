@@ -24,10 +24,6 @@ void draw() {
     if(skeleton.isTracked()) {
       KJoint[] joints = skeleton.getJoints();
       
-      color col = skeleton.getIndexColor();
-      fill(col);
-      stroke(col);
-      
       drawHandState(joints[KinectPV2.JointType_HandRight]);
       drawHandState(joints[KinectPV2.JointType_HandLeft]);
     }
@@ -40,10 +36,12 @@ void draw() {
 void drawHandState(KJoint joint) {
   noStroke();
   handState(joint.getState());
-  pushMatrix();
-  translate(joint.getX(), joint.getY(), joint.getZ());
-  ellipse(0, 0, 70, 70);
-  popMatrix();
+  //pushMatrix();
+  //translate(joint.getX(), joint.getY(), joint.getZ());
+  //ellipse(0, 0, 70, 70);
+  //popMatrix();
+  
+  ellipse(joint.getX(), joint.getY(), 70, 70);  //プログラム的に問題はないが精度が悪くなってる説
 }
 
 void handState(int handState) {

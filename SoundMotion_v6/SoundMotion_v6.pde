@@ -1,0 +1,229 @@
+import processing.sound.*;
+
+int i = 0;  //カウンター
+int r = 50; //ボールの半径
+int t = 10; //変位の基本定数
+int mintx = 5; //ボールのx変位の最小値
+int minty = 5; //ボールのy変位の最小値
+int tx = 0; //ボールのx変位
+int ty = 0; //ボールのy変位
+int x = 0; //ボールのx座標
+int y = 0; //ボールのy座標
+
+int alpha = 150; //簡易版エフェクトで使う
+int elwid = 10;
+
+int colorID = 0;  //色情報が入った下記配列を参照するための値
+int oldID = 8;  //色が変化したタイミングを検知するための値
+int[][] colorData = {  //色情報
+  {255,   0,   0},
+  {255,   0, 255},
+  {  0,   0, 255},
+  {  0, 255, 255},
+  {  0, 255,   0},
+  {255, 255,   0},
+  {255, 128,   0},
+  {255,   0,   0}
+};
+
+int pos = 0; //現在のボールの中心座標を一瞬記録する
+ArrayList<Integer> temp;  //ボールの中心座標を保持する配列
+ArrayList<Note> notes;
+boolean trigger = false; //ballActionのモード切り替えスイッチ
+
+SoundFile player; // = AudioPlayer player;?
+ArrayList<SoundFile> piano;  // = ArrayList<AudioPlayer> piano = new ArrayList<AudioPlayer>();
+ArrayList<SoundFile> drums;
+
+void setup() {
+  temp = new ArrayList<Integer>();
+  notes = new ArrayList<Note>();
+  piano = new ArrayList<SoundFile>(); 
+  drums = new ArrayList<SoundFile>();
+  
+  //fullScreen();  //size()とケンカするので片方だけ宣言しよう
+  size(800, 640); //width = 800px, height = 640px;
+  background(0);
+  frameRate(30);
+
+  //ボールの初期座標をセット
+  x = round(setValue(r, width)); //返り値を四捨五入.切り上げはceil(value).
+  y = round(setValue(r, height)); //返り値を四捨五入.切り捨てはfloor(value).
+
+  //ボールの漂う速度をセット
+  tx = round(setValue(-t, t));
+  ty = round(setValue(-t, t));
+
+  //ArrayListに初期値をセット
+  for (i = 0; i < 2; i++) temp.add(0);
+
+  audioInit();  //音声ファイルの取り込み
+}
+
+void draw() {
+  //background(0);
+  fade(0);
+
+  if (mousePressed == true && 
+    sq(x-mouseX) + sq(y-mouseY) < sq(r)) trigger = true;
+  if (mousePressed == false) trigger = false;
+
+  ballAction(trigger);
+  contract();  //中心の円が徐々に縮む
+
+  noStroke();
+  fill(255);
+  ellipse(x, y, 2*r, 2*r);
+  simpleEffect(trigger);  //簡易版
+}
+
+float setValue(int a, int b) {
+  float X = 0;
+  while (abs(X) <= 5) X = random(a, b); //5以上がセットされないように頑張ってくれるはず
+  return X;
+}
+
+void ballAction(boolean trigger) {
+  if (trigger) {
+    ballGrab();
+  } else ballDrift();
+}
+
+void ballDrift() {
+  oldID = 8;
+  notes.clear();
+
+  x += tx;
+  y += ty;
+
+  //壁にぶつかったら変位を逆転させ、最小速度より大きい速度の場合は減速させる
+  if (x+r > width) {  //右
+    if (tx < mintx) tx = mintx;
+    if (tx > mintx) tx *= 0.9;
+    tx = -abs(tx);
+    drums.get(0).play();
+  }
+  if (x-r < 0) {  //左
+    if (abs(tx) < abs(mintx)) tx = -mintx;
+    if (abs(tx) > abs(mintx)) tx *= 0.9;
+    tx = abs(tx);
+    drums.get(1).play();
+  }
+  if (y+r > height) {  //下
+    if (ty < minty) ty = minty;
+    if (ty > minty) ty *= 0.9;
+    ty = -abs(ty);
+    drums.get(2).play();
+  }
+  if (y-r < 0) {  //上
+    if (abs(ty) < abs(minty)) ty = -minty;
+    if (abs(ty) > abs(minty)) ty *= 0.9;
+    ty = abs(ty);
+    drums.get(3).play();
+  }
+}
+
+void ballGrab() {
+  x = mouseX;
+  y = mouseY;
+
+  pos = 1000*x + y;  //ボールの中心座標をひとつの数で記憶する魔法（？）
+
+  if (temp.size() >= 3) temp.remove(0);
+  temp.add(pos);
+  tx = temp.get(1)/1000 - temp.get(0)/1000;  //posからx座標の成分を抜き出してx変位を計算
+  ty = temp.get(1)%1000 - temp.get(0)%1000;  //posからy座標の成分を抜き出してy変位を計算
+}
+
+void fade(int Color) {
+  noStroke();
+  fill(Color, 55);
+  rectMode(CORNER);
+  rect(0, 0, width, height);
+}
+
+void simpleEffect(boolean _trigger) {
+  if (_trigger) {
+    stroke(255);  //メインでnoStroke()しているが、ここでも必要な様子
+    setColor();
+    fill(colorData[colorID][0], colorData[colorID][1], colorData[colorID][2], alpha);
+    ellipse(x, y, 2*r, 2*r);  //中心の円
+    if(checkScale()) {  //音階が変化したら
+      r = 150;  //中心の円を巨大化
+      setNote();
+      piano.get(colorID).play();
+    }
+    
+    noFill();
+    stroke(200, alpha);
+    strokeWeight(2);
+    for (i = 0; i < notes.size(); i++) {
+      notes.get(i).setXY(mouseX, mouseY);
+      ellipse(notes.get(i).x, notes.get(i).y, r+notes.get(i).elwid, r+notes.get(i).elwid);  //徐々に広がる灰色の円
+      notes.get(i).reload();
+    }  //オブジェクト指向が頭から抜けまくってたマン
+    
+    noFill();
+  }
+}
+
+void setColor() {  //色は上から順番に上がっていく感じ（）
+  colorID = 0;  //赤
+  if (y < height * 0.125 * 7) colorID = 1;  //紫
+  if (y < height * 0.125 * 6) colorID = 2;  //青
+  if (y < height * 0.125 * 5) colorID = 3;  //水
+  if (y < height * 0.125 * 4) colorID = 4;  //緑
+  if (y < height * 0.125 * 3) colorID = 5;  //黄
+  if (y < height * 0.125 * 2) colorID = 6;  //橙
+  if (y < height * 0.125) colorID = 7;  //赤
+}  //処理の順番はこうじゃないとダメです
+
+boolean checkScale() {
+  boolean changeScale = false;
+  if (oldID != colorID) {
+    changeScale = true;
+    oldID = colorID;
+  }
+  return changeScale;
+}
+
+void setNote() {
+  Note note = new Note(x, y, 1);
+  notes.add(note);
+}
+
+void contract() {
+  if (r > 50) r *= 0.5;
+  if (r < 50) r = 50;
+}
+
+void audioInit() {
+  player = new SoundFile(this, "C4do.wav");  //ID = 0
+  piano.add(player);
+  player = new SoundFile(this, "C4re.wav");  //ID = 1
+  piano.add(player);
+  player = new SoundFile(this, "C4mi.wav");  //ID = 2
+  piano.add(player);
+  player = new SoundFile(this, "C4fa.wav");  //ID = 3
+  piano.add(player);
+  player = new SoundFile(this, "C4so.wav");  //ID = 4
+  piano.add(player);
+  player = new SoundFile(this, "C4la.wav");  //ID = 5
+  piano.add(player);
+  player = new SoundFile(this, "C4ti.wav");  //ID = 6
+  piano.add(player);
+  player = new SoundFile(this, "C5do.wav");  //ID = 7
+  piano.add(player);
+  
+  //ファイル名の語尾に_rをつけるといかにも電子音源なドラムになる
+  player = new SoundFile(this, "tom_r.wav");  //ID = 0 右
+  drums.add(player);
+  player = new SoundFile(this, "snare_r.wav");  //ID = 1 左
+  drums.add(player);
+  player = new SoundFile(this, "bassdrum_r.wav");  //ID = 2 下
+  drums.add(player);
+  player = new SoundFile(this, "cymbal_r.wav");  //ID = 3 上
+  drums.add(player);
+  /*player = new SoundFile(this, "hat_r.wav");  //ID = 3 上
+  drums.add(player);*/
+}
