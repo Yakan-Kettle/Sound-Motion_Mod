@@ -34,8 +34,8 @@ class Note {
   }
 
   void reload() {
-    elwid += 100;
-    //alfa -= 2;
+    elwid += 2;
+    alfa -= 2;
   }
 
   void setX(float _x) {
@@ -43,11 +43,6 @@ class Note {
   }
 
   void setY(float _y){
-    y = _y;
-  }
-  
-  void setXY(int _x, int _y) {
-    x = _x;
     y = _y;
   }
 }

@@ -10,24 +10,6 @@ int y = 0; //ボールのy座標
 
 int alpha = 200; //簡易版エフェクトで使う
 int elwid = 10;
-/*
-int colorData = 0;  //色のRGB情報を保持する
-int R = 0;
-int G = 0;
-int B = 0;
-*/
-int colorID = 0;
-int oldID = 8;
-int[][] colorData = {
-  {255,   0,   0},
-  {255,   0, 255},
-  {  0,   0, 255},
-  {  0, 255, 255},
-  {  0, 255,   0},
-  {255, 255,   0},
-  {255, 128,   0},
-  {255,   0,   0}
-};
 
 int pos = 0; //現在のボールの中心座標を一瞬記録する
 ArrayList<Integer> temp = new ArrayList<Integer>();  //ボールの中心座標を保持する配列
@@ -65,13 +47,11 @@ void draw() {
   if (mousePressed == false) trigger = false;
 
   ballAction(trigger);
-  contract();  //中心の円が徐々に縮む
 
   noStroke();
   fill(255);
   ellipse(x, y, 2*r, 2*r);
-  //visualEffect();  //ここを切るときはsetNode()もOFFにしよう
-  simpleEffect(trigger);  //簡易版
+  visualEffect();  //ここを切るときはsetNode()もOFFにしよう
 }
 
 float setValue(int a, int b) {
@@ -82,15 +62,13 @@ float setValue(int a, int b) {
 
 void ballAction(boolean trigger) {
   if (trigger) {
-    //setNote();  //visualEffect()を切ってるときはここも消す
+    setNote();  //visualEffect()を切ってるときはここも消す
     ballGrab();
   } else ballDrift();
 }
 
 void ballDrift() {
   //background(0); //背景塗りつぶし
-  oldID = 8;
-  notes.clear();
 
   x += tx;
   y += ty;
@@ -138,7 +116,12 @@ void fade(int Color) {
   rect(0, 0, width, height);
 }
 
-/*void visualEffect() {
+void setNote() {
+  Note note = new Note(x, y, 1);
+  notes.add(note);
+}
+
+void visualEffect() {
   for (int i=0; i < notes.size (); i++) { //ここがエフェクトを描画するシステム
     noStroke();  //メインでnoStroke()しているが、ここでも必要な様子
     float rcol = random(1);  //後述の小円を描画に関する変数
@@ -164,109 +147,9 @@ void fade(int Color) {
     if (notes.get(i).getAlfa() <= 0) notes.remove(notes.get(i)); //一応メモリ解放はしてるっぽい？
     noFill();
   }
-}*/
-
-void simpleEffect(boolean _trigger) {
-  if (_trigger) {
-    stroke(255);  //メインでnoStroke()しているが、ここでも必要な様子
-    /*
-    float rcol = random(1);  //後述の小円を描画に関する変数
-    float rdx = 2*random(-30, 30);
-    float rdy = 2*random(-30, 30);
-    float rwid = 2*random(15, 25);
-    */
-    //alpha *= 0.5;
-    setColor();
-    //calcColor();
-    //fill(R, G, B, alpha); //中心の円の色
-    fill(colorData[colorID][0], colorData[colorID][1], colorData[colorID][2], alpha);
-    ellipse(x, y, 2*r, 2*r);  //中心の円
-    if(checkScale()) {  //音階が変化したら
-      r += 10;  //中心の円を巨大化
-      setNote();
-    }
-
-    /*
-    if (rcol < 1) fill(R*0.5, G*0.5, B    , alpha); //周囲の小円の色
-    if (rcol < 0.75) fill(R    , G*0.5, B*0.5, alpha); //周囲の小円の色
-    if (rcol < 0.50) fill(R*0.5, G    , B*0.5, alpha); //周囲の小円の色
-    if (rcol < 0.25) fill(R, G, B, alpha);           //当確率でバラつくようになっている
-    
-    if (rcol < 0.5) fill(colorData[colorID][0], colorData[colorID][1], colorData[colorID][2], alpha);
-    else fill(colorData[colorID][0], colorData[colorID][1], colorData[colorID][2], alpha);
-    ellipse(x + rdx, y + rdy, rwid, rwid);  //周囲の小円.描画位置が確率で変動する.
-    */
-    
-    noFill();
-    stroke(200, alpha);
-    strokeWeight(1);
-    for (i = 0; i < notes.size(); i++) {
-      notes.get(i).setXY(mouseX, mouseY);
-      ellipse(notes.get(i).x, notes.get(i).y, r+notes.get(i).elwid, r+notes.get(i).elwid);  //徐々に広がる灰色の円
-      notes.get(i).reload();
-    }  //オブジェクト指向が頭から抜けまくってたマン
-    
-    //reload();
-    //if (notes.get(i).getAlfa() <= 0) notes.remove(notes.get(i)); //一応メモリ解放はしてるっぽい？
-    noFill();
-  } else {
-    reset();
-  }
-}
-
-void setColor() {  //色は上から順番に上がっていく感じ（）
-  /*
-  colorData = 255000000;  //赤
-  if (y < height * 0.125 * 7) colorData = 255000255;  //紫
-  if (y < height * 0.125 * 6) colorData =       255;  //青
-  if (y < height * 0.125 * 5) colorData =    255255;  //水
-  if (y < height * 0.125 * 4) colorData =    255000;  //緑
-  if (y < height * 0.125 * 3) colorData = 255255000;  //黄
-  if (y < height * 0.125 * 2) colorData = 255128000;  //橙
-  if (y < height * 0.125) colorData = 255000000;  //赤
-  */
-  colorID = 0;  //赤
-  if (y < height * 0.125 * 7) colorID = 1;  //紫
-  if (y < height * 0.125 * 6) colorID = 2;  //青
-  if (y < height * 0.125 * 5) colorID = 3;  //水
-  if (y < height * 0.125 * 4) colorID = 4;  //緑
-  if (y < height * 0.125 * 3) colorID = 5;  //黄
-  if (y < height * 0.125 * 2) colorID = 6;  //橙
-  if (y < height * 0.125) colorID = 7;  //赤
-}  //処理の順番はこうじゃないとダメです
-/*
-void calcColor() {
-  R = ceil(colorData * 0.000001);
-  G = ceil(colorData * 0.01);
-  G = ceil(G % 1000);
-  B = ceil(colorData % 1000);
-}
-*/
-
-boolean checkScale() {
-  boolean changeScale = false;
-  if (oldID != colorID) {
-    changeScale = true;
-    oldID = colorID;
-  }
-  return changeScale;
-}
-
-void setNote() {
-  Note note = new Note(x, y, 1);
-  notes.add(note);
 }
 
 void reload() {
-  //alpha -= 2;
+  alpha -= 2;
   elwid += 100;
-}
-
-void contract() {
-  if (r > 50) r -= 2;
-}
-
-void reset() {
-  //alpha = 200;
-  elwid = 10;
 }
