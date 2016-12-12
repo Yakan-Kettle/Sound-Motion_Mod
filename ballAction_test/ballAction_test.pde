@@ -286,14 +286,15 @@ void audioInit() {
   player = new SoundFile(this, "C5do.wav");  //ID = 7
   piano.add(player);
   
-  player = new SoundFile(this, "tom.wav");  //ID = 0 右
+  //ファイル名の語尾に_rをつけるといかにも電子音源なドラムになる
+  player = new SoundFile(this, "tom_r.wav");  //ID = 0 右
   drums.add(player);
-  player = new SoundFile(this, "snare.wav");  //ID = 1 左
+  player = new SoundFile(this, "snare_r.wav");  //ID = 1 左
   drums.add(player);
-  player = new SoundFile(this, "bassdrum.wav");  //ID = 2 下
+  player = new SoundFile(this, "bassdrum_r.wav");  //ID = 2 下
   drums.add(player);
-  player = new SoundFile(this, "cymbal.wav");  //ID = 3 上
+  player = new SoundFile(this, "cymbal_r.wav");  //ID = 3 上
   drums.add(player);
-  /*player = new SoundFile(this, "hat.wav");  //ID = 3 上
+  /*player = new SoundFile(this, "hat_r.wav");  //ID = 3 上
   drums.add(player);*/
 }
