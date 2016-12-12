@@ -15,9 +15,9 @@ void draw() {
 
 void audioInit() {
   println("aaaa");
-  player = new SoundFile(this, "C:/Users/だれかさん/Documents/GitHub/Sound-Motion_Mod/ballAction_test/data/C4do.wav");  //ID = 0
+  player = new SoundFile(this, "C4do.wav");  //ID = 0
   wavs.add(player);
-  player = new SoundFile(this, "data/C4re.wav");  //ID = 1
+  player = new SoundFile(this, "C4re.wav");  //ID = 1
   wavs.add(player);
   player = new SoundFile(this, "C4mi.wav");  //ID = 2
   wavs.add(player);
@@ -30,5 +30,5 @@ void audioInit() {
   player = new SoundFile(this, "C4ti.wav");  //ID = 6
   wavs.add(player);
   player = new SoundFile(this, "C5do.wav");  //ID = 7
-  wavs.add(player);*/
+  wavs.add(player);
 }
