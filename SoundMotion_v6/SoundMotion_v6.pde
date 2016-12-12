@@ -1,11 +1,4 @@
 import processing.sound.*;
-import KinectPV2.KJoint;
-import KinectPV2.*;
-
-KinectPV2 kinect;
-boolean hand;
-KJoint rightHand;
-KJoint leftHand;
 
 int i = 0;  //カウンター
 int r = 50; //ボールの半径
@@ -16,8 +9,6 @@ int tx = 0; //ボールのx変位
 int ty = 0; //ボールのy変位
 int x = 0; //ボールのx座標
 int y = 0; //ボールのy座標
-float positionX = 0;
-float positionY = 0;
 
 int alpha = 150; //簡易版エフェクトで使う
 int elwid = 10;
@@ -39,27 +30,21 @@ int pos = 0; //現在のボールの中心座標を一瞬記録する
 ArrayList<Integer> temp;  //ボールの中心座標を保持する配列
 ArrayList<Note> notes;
 boolean trigger = false; //ballActionのモード切り替えスイッチ
-boolean eitherHand;
 
 SoundFile player; // = AudioPlayer player;?
 ArrayList<SoundFile> piano;  // = ArrayList<AudioPlayer> piano = new ArrayList<AudioPlayer>();
 ArrayList<SoundFile> drums;
 
 void setup() {
-  fullScreen();  //size()とケンカするので片方だけ宣言しよう
-  //size(800, 640); //width = 800px, height = 640px;
-  background(0);
-  frameRate(30);
-
-  kinect = new KinectPV2(this);
-  kinect.enableSkeletonColorMap(true);
-  kinect.enableColorImg(true);
-  kinect.init();
-  
   temp = new ArrayList<Integer>();
   notes = new ArrayList<Note>();
   piano = new ArrayList<SoundFile>(); 
   drums = new ArrayList<SoundFile>();
+  
+  //fullScreen();  //size()とケンカするので片方だけ宣言しよう
+  size(800, 640); //width = 800px, height = 640px;
+  background(0);
+  frameRate(30);
 
   //ボールの初期座標をセット
   x = round(setValue(r, width)); //返り値を四捨五入.切り上げはceil(value).
@@ -79,28 +64,9 @@ void draw() {
   //background(0);
   fade(0);
 
-  ArrayList<KSkeleton> skeletonArray = kinect.getSkeletonColorMap();  //こいつはどうやらここにいないとダメらしい
-  for (int i = 0; i < skeletonArray.size(); i++) {
-    KSkeleton skeleton = (KSkeleton) skeletonArray.get(i);
-    if(skeleton.isTracked()) {
-      KJoint[] joints = skeleton.getJoints();
-      rightHand = joints[KinectPV2.JointType_HandRight];
-      leftHand = joints[KinectPV2.JointType_HandLeft];
-      
-      drawHandState(rightHand);
-      drawHandState(leftHand);
-    }
-  }
-  
-  if (hand == true && 
-      sq(x-rightHand.getX()) + sq(y-rightHand.getY()) < sq(r)) {
-        trigger = true;
-        eitherHand = true;
-      } else if (hand == true &&
-      sq(x-leftHand.getX()) + sq(y-leftHand.getY()) < sq(r)) {
-        trigger = true;
-        eitherHand = false;
-      } else if (hand == false) trigger = false;
+  if (mousePressed == true && 
+    sq(x-mouseX) + sq(y-mouseY) < sq(r)) trigger = true;
+  if (mousePressed == false) trigger = false;
 
   ballAction(trigger);
   contract();  //中心の円が徐々に縮む
@@ -115,24 +81,6 @@ float setValue(int a, int b) {
   float X = 0;
   while (abs(X) <= 5) X = random(a, b); //5以上がセットされないように頑張ってくれるはず
   return X;
-}
-
-void drawHandState(KJoint joint) {
-  stroke(100);
-  strokeWeight(5); 
-  handState(joint.getState());
-  ellipse(joint.getX(), joint.getY(), 10, 10);  //pushMatrix()しなくてもプログラム的に問題はないが精度が悪くなってる説
-}
-
-void handState(int handState) {
-  switch(handState) {
-  case KinectPV2.HandState_Open:
-    hand = false;
-    break;
-  case KinectPV2.HandState_Closed:
-    hand = true;
-    break;
-  }
 }
 
 void ballAction(boolean trigger) {
@@ -176,16 +124,8 @@ void ballDrift() {
 }
 
 void ballGrab() {
-  if (eitherHand) {
-    positionX = rightHand.getX();
-    positionY = rightHand.getY();
-  } else {
-    positionX = leftHand.getX();
-    positionY = leftHand.getY();
-  }
-  
-  x = round(positionX);
-  y = round(positionY);
+  x = mouseX;
+  y = mouseY;
 
   pos = 1000*x + y;  //ボールの中心座標をひとつの数で記憶する魔法（？）
 
@@ -218,7 +158,7 @@ void simpleEffect(boolean _trigger) {
     stroke(200, alpha);
     strokeWeight(2);
     for (i = 0; i < notes.size(); i++) {
-      notes.get(i).setXY(positionX, positionY);
+      notes.get(i).setXY(mouseX, mouseY);
       ellipse(notes.get(i).x, notes.get(i).y, r+notes.get(i).elwid, r+notes.get(i).elwid);  //徐々に広がる灰色の円
       notes.get(i).reload();
     }  //オブジェクト指向が頭から抜けまくってたマン

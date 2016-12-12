@@ -46,7 +46,7 @@ class Note {
     y = _y;
   }
   
-  void setXY(float _x, float _y) {
+  void setXY(int _x, int _y) {
     x = _x;
     y = _y;
   }

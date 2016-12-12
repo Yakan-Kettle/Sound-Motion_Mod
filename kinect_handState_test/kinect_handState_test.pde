@@ -4,7 +4,7 @@ import KinectPV2.*;
 KinectPV2 kinect;
 
 void setup() {
-  size(1920, 1080);
+  size(1920, 1080, P3D);
   
   kinect = new KinectPV2(this);
   
