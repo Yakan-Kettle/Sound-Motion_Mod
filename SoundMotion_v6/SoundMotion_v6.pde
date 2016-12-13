@@ -132,12 +132,12 @@ void handState(int handState) {
   case KinectPV2.HandState_Open:
     d = 10;
     w = 3;
-    stroke(100);
+    stroke(192);
     hand = false;
     break;
   case KinectPV2.HandState_Closed:
     d = 20;
-    w = 10;
+    w = 5;
     stroke(255);
     hand = true;
     break;
