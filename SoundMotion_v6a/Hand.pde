@@ -72,7 +72,7 @@ class Hand {
     strokeWeight(_w); 
     ellipse(_x, _y, _d, _d);  //pushMatrix()しなくてもプログラム的に問題はないが精度が悪くなってる説
   }
-  
+  /*
   void update(float _x, float _y) {
     x = _x;
     y = _y;
@@ -81,7 +81,7 @@ class Hand {
   void updateState(boolean newState) {
     openClose = newState;
   }
-  
+  */
   /*void changeHand(int handState, IntList handLog) {
     if (hand == false) {
       if (handState==KinectPV2.HandState_Closed) {
