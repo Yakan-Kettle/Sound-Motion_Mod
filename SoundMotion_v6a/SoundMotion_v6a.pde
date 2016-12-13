@@ -59,14 +59,8 @@ void setup() {
   kinect.enableColorImg(true);
   kinect.init();
   
-  rightHand = new RightHand(KinectPV2.HandState_Closed, 
-                            KinectPV2.HandState_Lasso, 
-                            KinectPV2.HandState_Open, 
-                            KinectPV2.HandState_NotTracked);
-  leftHand = new LeftHand(KinectPV2.HandState_Closed, 
-                          KinectPV2.HandState_Lasso, 
-                          KinectPV2.HandState_Open, 
-                          KinectPV2.HandState_NotTracked);
+  rightHand = new RightHand();
+  leftHand = new LeftHand();
 
   temp = new ArrayList<Integer>();
   notes = new ArrayList<Note>();

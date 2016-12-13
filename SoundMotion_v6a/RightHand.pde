@@ -6,19 +6,10 @@ class RightHand {
   private int either;
   private IntList handLog;
   
-  private int Closed;
-  private int Lasso;
-  private int Open;
-  private int None;
-  
   private int d;
   private int w;
   
-  RightHand (int _Closed, int _Lasso, int _Open, int _None) {
-    Closed = _Closed;
-    Lasso = _Lasso;
-    Open = _Open;
-    None = _None;
+  RightHand () {
     openClose = false;
     either = 0; //右手か左手かを識別する。0が右、1が左。
     handLog = new IntList();  //手の状態遷移を保存するリスト
@@ -47,15 +38,16 @@ class RightHand {
     //else changeHand(handState, handLogL);
     
     switch(handState) {
-    case Closed:
-    case Lasso:
+    case 3:  //HandState_Closed
+    case 4:  //HandState_Lasso
+    case 0:  //Nodata
       d = 20;
       w = 5;
       stroke(255);
       openClose = true;
       break;
-    case Open:
-    case None:
+    case 2:  //HandState_Open
+    case 1:  //HandState_NotTracked
       d = 10;
       w = 3;
       stroke(192);
