@@ -129,14 +129,14 @@ void drawHandState(KJoint joint) {
 void handState(int handState) {
   switch(handState) {
   case KinectPV2.HandState_Open:
-    d = 10;
-    w = 20;
+    d = 20;
+    w = 10;
     fill(255);
     hand = false;
     break;
   case KinectPV2.HandState_Closed:
     d = 10;
-    w = 10;
+    w = 3;
     fill(100);
     hand = true;
     break;
