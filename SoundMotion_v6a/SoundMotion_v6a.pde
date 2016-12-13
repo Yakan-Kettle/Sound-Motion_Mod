@@ -8,7 +8,8 @@ RightHand rightHand;  //右手の諸々の情報
 LeftHand leftHand;  //左手の諸々の情報
 
 int i = 0;  //カウンター
-int r = 50; //ボールの半径
+int ir = 100;  //ボール半径の基本値
+int r = ir; //ボールの半径
 int t = 10; //変位の基本定数
 int mintx = 5; //ボールのx変位の最小値
 int minty = 5; //ボールのy変位の最小値
@@ -85,17 +86,12 @@ void draw() {
   ArrayList<KSkeleton> skeletonArray = kinect.getSkeletonColorMap();  //こいつはどうやらここにいないとダメらしい
   for (int i = 0; i < skeletonArray.size(); i++) {
     KSkeleton skeleton = (KSkeleton) skeletonArray.get(i);
-    int j = i;
-    while (!skeleton.isTracked() || i > 0) {
-      skeleton = (KSkeleton) skeletonArray.get(i);
-      i--;
+    if(skeleton.isTracked()) {
+      KJoint[] joints = skeleton.getJoints();
+  
+      drawHandState(joints[KinectPV2.JointType_HandRight], rightHand.either);
+      drawHandState(joints[KinectPV2.JointType_HandLeft], leftHand.either);
     }
-    i = j;
- 
-    KJoint[] joints = skeleton.getJoints();
-
-    drawHandState(joints[KinectPV2.JointType_HandRight], rightHand.either);
-    drawHandState(joints[KinectPV2.JointType_HandLeft], leftHand.either);
   }
 
   if (hand == true && 
@@ -141,13 +137,13 @@ void handState(int handState) {
   switch(handState) {
   case KinectPV2.HandState_Closed:
   case KinectPV2.HandState_Lasso:
-  case KinectPV2.HandState_NotTracked:
     d = 20;
     w = 5;
     stroke(255);
     hand = true;
     break;
   case KinectPV2.HandState_Open:
+  case KinectPV2.HandState_NotTracked:
     d = 10;
     w = 3;
     stroke(192);
@@ -257,7 +253,7 @@ void simpleEffect(boolean _trigger) {
     fill(colorData[colorID][0], colorData[colorID][1], colorData[colorID][2], alpha);
     ellipse(x, y, 2*r, 2*r);  //中心の円
     if (checkScale()) {  //音階が変化したら
-      r = 150;  //中心の円を巨大化
+      r = 200;  //中心の円を巨大化
       setNote();
       piano.get(colorID).play();
     }
@@ -301,8 +297,8 @@ void setNote() {
 }
 
 void contract() {
-  if (r > 50) r *= 0.5;
-  if (r < 50) r = 50;
+  if (r > ir) r *= 0.5;
+  if (r < ir) r = 50;
 }
 
 void audioInit() {
