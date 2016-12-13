@@ -84,13 +84,18 @@ void draw() {
 
   ArrayList<KSkeleton> skeletonArray = kinect.getSkeletonColorMap();  //こいつはどうやらここにいないとダメらしい
   for (int i = 0; i < skeletonArray.size(); i++) {
-    KSkeleton skeleton = (KSkeleton) skeletonArray.get(i);
-    if (skeleton.isTracked()) {
-      KJoint[] joints = skeleton.getJoints();
-
-      drawHandState(joints[KinectPV2.JointType_HandRight], rightHand.either);
-      drawHandState(joints[KinectPV2.JointType_HandLeft], leftHand.either);
+    KSkeleton skeleton;
+    int j = i;
+    while (!skeleton.isTracked() || i > 0) {
+      skeleton = (KSkeleton) skeletonArray.get(i);
+      i--;
     }
+    i = j;
+ 
+    KJoint[] joints = skeleton.getJoints();
+
+    drawHandState(joints[KinectPV2.JointType_HandRight], rightHand.either);
+    drawHandState(joints[KinectPV2.JointType_HandLeft], leftHand.either);
   }
 
   if (hand == true && 
