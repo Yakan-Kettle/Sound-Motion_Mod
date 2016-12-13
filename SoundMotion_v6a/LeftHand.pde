@@ -23,10 +23,16 @@ class LeftHand {
     return either;
   }
   
-  void drawHandMarker(float x, float y, int d, int w, boolean h) {
-    updateState(h);
-    strokeWeight(w); 
-    ellipse(x, y, d, d);  //pushMatrix()しなくてもプログラム的に問題はないが精度が悪くなってる説
+  void drawHandMarker(float _x, float _y, int _d, int _w, boolean _h) {
+    update(_x, _y, _h);
+    strokeWeight(_w); 
+    ellipse(_x, _y, _d, _d);  //pushMatrix()しなくてもプログラム的に問題はないが精度が悪くなってる説
+  }
+  
+  void update(float _x, float _y, boolean _h) {
+    x = _x;
+    y = _y;
+    openClose = _h;
   }
   
   void updateState(boolean newState) {
