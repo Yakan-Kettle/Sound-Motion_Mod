@@ -84,7 +84,7 @@ void draw() {
 
   ArrayList<KSkeleton> skeletonArray = kinect.getSkeletonColorMap();  //こいつはどうやらここにいないとダメらしい
   for (int i = 0; i < skeletonArray.size(); i++) {
-    KSkeleton skeleton;
+    KSkeleton skeleton = (KSkeleton) skeletonArray.get(i);
     int j = i;
     while (!skeleton.isTracked() || i > 0) {
       skeleton = (KSkeleton) skeletonArray.get(i);
