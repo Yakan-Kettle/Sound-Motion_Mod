@@ -18,6 +18,8 @@ int x = 0; //ボールのx座標
 int y = 0; //ボールのy座標
 float positionX = 0;
 float positionY = 0;
+int d = 10; //手のマーカーの直径
+int w = 3; //マーカーの太さ
 
 int alpha = 150; //簡易版エフェクトで使う
 int elwid = 10;
@@ -94,13 +96,13 @@ void draw() {
   
   if (hand == true && 
       sq(x-rightHand.getX()) + sq(y-rightHand.getY()) < sq(r)) {
-        trigger = true;
-        eitherHand = true;
-      } else if (hand == true &&
-      sq(x-leftHand.getX()) + sq(y-leftHand.getY()) < sq(r)) {
-        trigger = true;
-        eitherHand = false;
-      } else if (hand == false) trigger = false;
+    trigger = true;
+    eitherHand = true;
+  } else if (hand == true &&
+             sq(x-leftHand.getX()) + sq(y-leftHand.getY()) < sq(r)) {
+    trigger = true;
+    eitherHand = false;
+  } else if (hand == false) trigger = false;
 
   ballAction(trigger);
   contract();  //中心の円が徐々に縮む
@@ -118,18 +120,24 @@ float setValue(int a, int b) {
 }
 
 void drawHandState(KJoint joint) {
-  stroke(100);
-  strokeWeight(5); 
   handState(joint.getState());
-  ellipse(joint.getX(), joint.getY(), 10, 10);  //pushMatrix()しなくてもプログラム的に問題はないが精度が悪くなってる説
+  stroke(100);
+  strokeWeight(w); 
+  ellipse(joint.getX(), joint.getY(), d, d);  //pushMatrix()しなくてもプログラム的に問題はないが精度が悪くなってる説
 }
 
 void handState(int handState) {
   switch(handState) {
   case KinectPV2.HandState_Open:
+    d = 10;
+    w = 20;
+    fill(255);
     hand = false;
     break;
   case KinectPV2.HandState_Closed:
+    d = 10;
+    w = 10;
+    fill(100);
     hand = true;
     break;
   }
