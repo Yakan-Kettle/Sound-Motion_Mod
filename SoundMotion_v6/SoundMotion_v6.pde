@@ -128,6 +128,7 @@ void drawHandState(KJoint joint) {
 }
 
 void handState(int handState) {
+  println(handState);
   switch(handState) {
   case KinectPV2.HandState_Open:
     d = 10;
