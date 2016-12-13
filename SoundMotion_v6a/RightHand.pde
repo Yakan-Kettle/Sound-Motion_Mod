@@ -23,7 +23,7 @@ class RightHand {
     return either;
   }
   
-  void drawHandMarker(int x, int y, int d, int w, boolean h) {
+  void drawHandMarker(float x, float y, int d, int w, boolean h) {
     updateState(h);
     strokeWeight(w); 
     ellipse(x, y, d, d);  //pushMatrix()しなくてもプログラム的に問題はないが精度が悪くなってる説
