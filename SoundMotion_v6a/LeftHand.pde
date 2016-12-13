@@ -5,7 +5,16 @@ class LeftHand {
   private int either;
   private IntList handLog;
   
-  LeftHand () {
+  private int Closed;
+  private int Lasso;
+  private int Open;
+  private int None;
+  
+  LeftHand (int _Closed, int _Lasso, int _Open, int _None) {
+    Closed = _Closed;
+    Lasso = _Lasso;
+    Open = _Open;
+    None = _None;
     openClose = false;
     either = 1; //右手か左手かを識別する。0が右、1が左。
     handLog = new IntList();  //手の状態遷移を保存するリスト
@@ -23,16 +32,43 @@ class LeftHand {
     return either;
   }
   
-  void drawHandMarker(float _x, float _y, int _d, int _w, boolean _h) {
-    update(_x, _y, _h);
+  void drawHandState(KJoint _joint) {
+    handState(_joint.getState());
+    drawHandMarker(_joint.getX(), _joint.getY(), d, w);
+  }
+  
+  void handState(int handState) {
+    //println(handState);
+    //if(either == KinectPV2.JointType_HandRight) changeHand(handState, handLogR);
+    //else changeHand(handState, handLogL);
+    
+    switch(handState) {
+    case Closed:
+    case Lasso:
+      d = 20;
+      w = 5;
+      stroke(255);
+      openClose = true;
+      break;
+    case Open:
+    case None:
+      d = 10;
+      w = 3;
+      stroke(192);
+      openClose = false;
+      break;
+    }
+  }
+  
+  void drawHandMarker(float _x, float _y, int _d, int _w) {
+    //update(_x, _y);
     strokeWeight(_w); 
     ellipse(_x, _y, _d, _d);  //pushMatrix()しなくてもプログラム的に問題はないが精度が悪くなってる説
   }
   
-  void update(float _x, float _y, boolean _h) {
+  void update(float _x, float _y) {
     x = _x;
     y = _y;
-    openClose = _h;
   }
   
   void updateState(boolean newState) {

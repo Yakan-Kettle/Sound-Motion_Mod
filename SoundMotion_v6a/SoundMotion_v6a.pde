@@ -58,8 +58,15 @@ void setup() {
   kinect.enableSkeletonColorMap(true);
   kinect.enableColorImg(true);
   kinect.init();
-  rightHand = new RightHand();
-  leftHand = new LeftHand();
+  
+  rightHand = new RightHand(KinectPV2.HandState_Closed, 
+                            KinectPV2.HandState_Lasso, 
+                            KinectPV2.HandState_Open, 
+                            KinectPV2.HandState_NotTracked);
+  leftHand = new LeftHand(KinectPV2.HandState_Closed, 
+                          KinectPV2.HandState_Lasso, 
+                          KinectPV2.HandState_Open, 
+                          KinectPV2.HandState_NotTracked);
 
   temp = new ArrayList<Integer>();
   notes = new ArrayList<Note>();
@@ -89,8 +96,8 @@ void draw() {
     if(skeleton.isTracked()) {
       KJoint[] joints = skeleton.getJoints();
   
-      drawHandState(joints[KinectPV2.JointType_HandRight], rightHand.either);
-      drawHandState(joints[KinectPV2.JointType_HandLeft], leftHand.either);
+      rightHand.drawHandState(joints[KinectPV2.JointType_HandRight]);
+      leftHand.drawHandState(joints[KinectPV2.JointType_HandLeft]);
     }
   }
 
@@ -121,11 +128,11 @@ float setValue(int a, int b) {
   while (abs(X) <= 5) X = random(a, b); //5以上がセットされないように頑張ってくれるはず
   return X;
 }
-
+/*
 boolean checkHitHand() {
   return true;
-}
-
+}*/
+/*
 void drawHandState(KJoint joint, int either) {
   handState(joint.getState());
   if (either < 1)rightHand.drawHandMarker(joint.getX(), joint.getY(), d, w, hand);
@@ -153,7 +160,7 @@ void handState(int handState) {
     hand = false;
     break;
   }
-}
+}*/
 
 /*void changeHand(int handState, IntList handLog) {
   if (hand == false) {
