@@ -147,6 +147,7 @@ void handState(int handState) {
     hand = false;
     break;
   case KinectPV2.HandState_Closed:
+  case KinectPV2.HandState_NotTracked:
     d = 20;
     w = 5;
     stroke(255);
