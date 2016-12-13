@@ -3,9 +3,10 @@ import KinectPV2.KJoint;
 import KinectPV2.*;
 
 KinectPV2 kinect;
-boolean hand;
-KJoint rightHand;
-KJoint leftHand;
+boolean hand;  //手の状態をセットする
+KJoint rightHand;  //右手の諸々の情報
+KJoint leftHand;  //左手の諸々の情報
+IntList handLog;  //手の状態を保存するリスト
 
 int i = 0;  //カウンター
 int r = 50; //ボールの半径
@@ -27,14 +28,14 @@ int elwid = 10;
 int colorID = 0;  //色情報が入った下記配列を参照するための値
 int oldID = 8;  //色が変化したタイミングを検知するための値
 int[][] colorData = {  //色情報
-  {255,   0,   0},
-  {255,   0, 255},
-  {  0,   0, 255},
-  {  0, 255, 255},
-  {  0, 255,   0},
-  {255, 255,   0},
-  {255, 128,   0},
-  {255,   0,   0}
+  {255, 0, 0}, 
+  {255, 0, 255}, 
+  {  0, 0, 255}, 
+  {  0, 255, 255}, 
+  {  0, 255, 0}, 
+  {255, 255, 0}, 
+  {255, 128, 0}, 
+  {255, 0, 0}
 };
 
 int pos = 0; //現在のボールの中心座標を一瞬記録する
@@ -57,7 +58,8 @@ void setup() {
   kinect.enableSkeletonColorMap(true);
   kinect.enableColorImg(true);
   kinect.init();
-  
+  handLog = new IntList();
+
   temp = new ArrayList<Integer>();
   notes = new ArrayList<Note>();
   piano = new ArrayList<SoundFile>(); 
@@ -84,22 +86,22 @@ void draw() {
   ArrayList<KSkeleton> skeletonArray = kinect.getSkeletonColorMap();  //こいつはどうやらここにいないとダメらしい
   for (int i = 0; i < skeletonArray.size(); i++) {
     KSkeleton skeleton = (KSkeleton) skeletonArray.get(i);
-    if(skeleton.isTracked()) {
+    if (skeleton.isTracked()) {
       KJoint[] joints = skeleton.getJoints();
       rightHand = joints[KinectPV2.JointType_HandRight];
       leftHand = joints[KinectPV2.JointType_HandLeft];
-      
+
       drawHandState(rightHand);
       drawHandState(leftHand);
     }
   }
-  
+
   if (hand == true && 
-      sq(x-rightHand.getX()) + sq(y-rightHand.getY()) < sq(r)) {
+    sq(x-rightHand.getX()) + sq(y-rightHand.getY()) < sq(r)) {
     trigger = true;
     eitherHand = true;
   } else if (hand == true &&
-             sq(x-leftHand.getX()) + sq(y-leftHand.getY()) < sq(r)) {
+    sq(x-leftHand.getX()) + sq(y-leftHand.getY()) < sq(r)) {
     trigger = true;
     eitherHand = false;
   } else if (hand == false) trigger = false;
@@ -139,6 +141,33 @@ void handState(int handState) {
     stroke(255);
     hand = true;
     break;
+  }
+}
+
+void changeHand(int handState) {
+  if (hand == false) {
+    if (handState==KinectPV2.HandState_Closed) {
+      handLog = new IntList();
+      hand=true;
+    }
+  } else {
+    if (handState==KinectPV2.HandState_Closed) {
+      handLog = new IntList();
+    } else {
+      int size = handLog.size();
+      handLog.add(size-1, handState);
+      while (handLog.size()>4) {
+        handLog.remove(0);
+      }
+      int count=0;
+      for (int i=0; i<handLog.size(); i++) {
+        if (handLog.get(i)==KinectPV2.HandState_Open) count++;
+      }
+      if (count>2) {
+        //手を開いたときの処理
+        hand=false;
+      }
+    }
   }
 }
 
@@ -190,7 +219,7 @@ void ballGrab() {
     positionX = leftHand.getX();
     positionY = leftHand.getY();
   }
-  
+
   x = round(positionX);
   y = round(positionY);
 
@@ -215,12 +244,12 @@ void simpleEffect(boolean _trigger) {
     setColor();
     fill(colorData[colorID][0], colorData[colorID][1], colorData[colorID][2], alpha);
     ellipse(x, y, 2*r, 2*r);  //中心の円
-    if(checkScale()) {  //音階が変化したら
+    if (checkScale()) {  //音階が変化したら
       r = 150;  //中心の円を巨大化
       setNote();
       piano.get(colorID).play();
     }
-    
+
     noFill();
     stroke(200, alpha);
     strokeWeight(2);
@@ -229,7 +258,7 @@ void simpleEffect(boolean _trigger) {
       ellipse(notes.get(i).x, notes.get(i).y, r+notes.get(i).elwid, r+notes.get(i).elwid);  //徐々に広がる灰色の円
       notes.get(i).reload();
     }  //オブジェクト指向が頭から抜けまくってたマン
-    
+
     noFill();
   }
 }
@@ -281,7 +310,7 @@ void audioInit() {
   piano.add(player);
   player = new SoundFile(this, "C5do.wav");  //ID = 7
   piano.add(player);
-  
+
   //ファイル名の語尾に_rをつけるといかにも電子音源なドラムになる
   player = new SoundFile(this, "tom_r.wav");  //ID = 0 右
   drums.add(player);
@@ -292,5 +321,5 @@ void audioInit() {
   player = new SoundFile(this, "cymbal_r.wav");  //ID = 3 上
   drums.add(player);
   /*player = new SoundFile(this, "hat_r.wav");  //ID = 3 上
-  drums.add(player);*/
+   drums.add(player);*/
 }
