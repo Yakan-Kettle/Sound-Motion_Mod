@@ -1,6 +1,7 @@
 class LeftHand {
   private float x;
   private float y;
+  
   private boolean openClose;
   private int either;
   private IntList handLog;
@@ -9,6 +10,9 @@ class LeftHand {
   private int Lasso;
   private int Open;
   private int None;
+  
+  private int d;
+  private int w;
   
   LeftHand (int _Closed, int _Lasso, int _Open, int _None) {
     Closed = _Closed;
