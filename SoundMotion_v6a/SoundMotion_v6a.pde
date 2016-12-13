@@ -4,8 +4,8 @@ import KinectPV2.*;
 
 KinectPV2 kinect;
 boolean hand;  //手の状態をセットする
-RightHand rightHand;  //右手の諸々の情報
-LeftHand leftHand;  //左手の諸々の情報
+Hand rightHand;  //右手の諸々の情報
+Hand leftHand;  //左手の諸々の情報
 
 int i = 0;  //カウンター
 int ir = 100;  //ボール半径の基本値
@@ -59,8 +59,8 @@ void setup() {
   kinect.enableColorImg(true);
   kinect.init();
   
-  rightHand = new RightHand();
-  leftHand = new LeftHand();
+  rightHand = new Hand(0);
+  leftHand = new Hand(1);
 
   temp = new ArrayList<Integer>();
   notes = new ArrayList<Note>();
@@ -95,7 +95,7 @@ void draw() {
     }
   }
 
-  if (hand == true && 
+  /*if (hand == true && 
     sq(x-rightHand.getX()) + sq(y-rightHand.getY()) < sq(r)) {
     trigger = true;
     eitherHand = true;
@@ -103,7 +103,9 @@ void draw() {
     sq(x-leftHand.getX()) + sq(y-leftHand.getY()) < sq(r)) {
     trigger = true;
     eitherHand = false;
-  } else if (hand == false) trigger = false;
+  } else if (hand == false) trigger = false;*/
+  
+  if(rightHand.checkGraped(x, y, r)) trigger = true;
 
   ballAction(trigger);
   contract();  //中心の円が徐々に縮む
@@ -224,10 +226,10 @@ void ballDrift() {
 }
 
 void ballGrab() {
-  if (eitherHand) {
+  if (rightHand.catching) {
     positionX = rightHand.getX();
     positionY = rightHand.getY();
-  } else {
+  } else if (leftHand.catching){
     positionX = leftHand.getX();
     positionY = leftHand.getY();
   }
