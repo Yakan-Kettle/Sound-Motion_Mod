@@ -46,7 +46,7 @@ ArrayList<SoundFile> piano;  // = ArrayList<AudioPlayer> piano = new ArrayList<A
 ArrayList<SoundFile> drums;
 
 void setup() {
-  fullScreen();  //size()とケンカするので片方だけ宣言しよう
+  fullScreen(2);  //size()とケンカするので片方だけ宣言しよう
   //size(800, 640); //width = 800px, height = 640px;
   background(0);
   frameRate(30);
