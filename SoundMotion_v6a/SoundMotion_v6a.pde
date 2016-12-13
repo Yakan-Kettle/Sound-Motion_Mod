@@ -4,10 +4,8 @@ import KinectPV2.*;
 
 KinectPV2 kinect;
 boolean hand;  //手の状態をセットする
-KJoint rightHand;  //右手の諸々の情報
-KJoint leftHand;  //左手の諸々の情報
-IntList handLogR;  //手の状態を保存するリスト
-IntList handLogL;
+RightHand rightHand;  //右手の諸々の情報
+LeftHand leftHand;  //左手の諸々の情報
 
 int i = 0;  //カウンター
 int r = 50; //ボールの半径
@@ -59,8 +57,8 @@ void setup() {
   kinect.enableSkeletonColorMap(true);
   kinect.enableColorImg(true);
   kinect.init();
-  handLogR = new IntList();
-  handLogL = new IntList();
+  rightHand = new RightHand();
+  leftHand = new LeftHand();
 
   temp = new ArrayList<Integer>();
   notes = new ArrayList<Note>();
@@ -82,7 +80,6 @@ void setup() {
 }
 
 void draw() {
-  //background(0);
   fade(0);
 
   ArrayList<KSkeleton> skeletonArray = kinect.getSkeletonColorMap();  //こいつはどうやらここにいないとダメらしい
@@ -90,22 +87,18 @@ void draw() {
     KSkeleton skeleton = (KSkeleton) skeletonArray.get(i);
     if (skeleton.isTracked()) {
       KJoint[] joints = skeleton.getJoints();
-      rightHand = joints[KinectPV2.JointType_HandRight];
-      leftHand = joints[KinectPV2.JointType_HandLeft];
 
-      drawHandState(rightHand, KinectPV2.JointType_HandRight);
-      drawHandState(leftHand, KinectPV2.JointType_HandLeft);
+      drawHandState(joints[KinectPV2.JointType_HandRight], rightHand.either);
+      drawHandState(joints[KinectPV2.JointType_HandLeft], leftHand.either);
     }
   }
 
   if (hand == true && 
     sq(x-rightHand.getX()) + sq(y-rightHand.getY()) < sq(r)) {
     trigger = true;
-    eitherHand = true;
   } else if (hand == true &&
     sq(x-leftHand.getX()) + sq(y-leftHand.getY()) < sq(r)) {
     trigger = true;
-    eitherHand = false;
   } else if (hand == false) trigger = false;
 
   ballAction(trigger);
@@ -123,16 +116,20 @@ float setValue(int a, int b) {
   return X;
 }
 
-void drawHandState(KJoint joint, int either) {
-  handState(joint.getState(), either);
-  strokeWeight(w); 
-  ellipse(joint.getX(), joint.getY(), d, d);  //pushMatrix()しなくてもプログラム的に問題はないが精度が悪くなってる説
+boolean checkHitHand() {
+  return true;
 }
 
-void handState(int handState, int either) {
-  println(handState);
-  if(either == KinectPV2.JointType_HandRight) changeHand(handState, handLogR);
-  else changeHand(handState, handLogL);
+void drawHandState(KJoint joint, int either) {
+  handState(joint.getState());
+  if (either < 1)rightHand.drawHandMarker(joint.getX(), joint.getY(), d, w, hand);
+  else leftHand.drawHandMarker(joint.getX(), joint.getY(), d, w, hand);
+}
+
+void handState(int handState) {
+  //println(handState);
+  //if(either == KinectPV2.JointType_HandRight) changeHand(handState, handLogR);
+  //else changeHand(handState, handLogL);
   
   switch(handState) {
   case KinectPV2.HandState_Open:
@@ -150,7 +147,7 @@ void handState(int handState, int either) {
   }
 }
 
-void changeHand(int handState, IntList handLog) {
+/*void changeHand(int handState, IntList handLog) {
   if (hand == false) {
     if (handState==KinectPV2.HandState_Closed) {
       handLog = new IntList();
@@ -175,7 +172,7 @@ void changeHand(int handState, IntList handLog) {
       }
     }
   }
-}
+}*/
 
 void ballAction(boolean trigger) {
   if (trigger) {
