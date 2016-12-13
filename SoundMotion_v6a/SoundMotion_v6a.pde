@@ -96,9 +96,11 @@ void draw() {
   if (hand == true && 
     sq(x-rightHand.getX()) + sq(y-rightHand.getY()) < sq(r)) {
     trigger = true;
+    eitherHand = true;
   } else if (hand == true &&
     sq(x-leftHand.getX()) + sq(y-leftHand.getY()) < sq(r)) {
     trigger = true;
+    eitherHand = false;
   } else if (hand == false) trigger = false;
 
   ballAction(trigger);
