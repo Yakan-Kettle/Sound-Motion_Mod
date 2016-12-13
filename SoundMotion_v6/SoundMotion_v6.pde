@@ -121,7 +121,6 @@ float setValue(int a, int b) {
 
 void drawHandState(KJoint joint) {
   handState(joint.getState());
-  stroke(100);
   strokeWeight(w); 
   ellipse(joint.getX(), joint.getY(), d, d);  //pushMatrix()しなくてもプログラム的に問題はないが精度が悪くなってる説
 }
@@ -129,15 +128,15 @@ void drawHandState(KJoint joint) {
 void handState(int handState) {
   switch(handState) {
   case KinectPV2.HandState_Open:
-    d = 20;
-    w = 10;
-    fill(255);
+    d = 10;
+    w = 3;
+    stroke(100);
     hand = false;
     break;
   case KinectPV2.HandState_Closed:
-    d = 10;
-    w = 3;
-    fill(100);
+    d = 20;
+    w = 10;
+    stroke(255);
     hand = true;
     break;
   }
