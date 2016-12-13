@@ -140,6 +140,7 @@ void handState(int handState) {
   
   switch(handState) {
   case KinectPV2.HandState_Open:
+  case KinectPV2.HandState_Lasso:
     d = 10;
     w = 3;
     stroke(192);
