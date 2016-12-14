@@ -65,7 +65,6 @@ class Hand {
       handLog = 3;
       break;
     case 2:  //HandState_Open
-    case 1:  //HandState_NotTracked
       d = 10;
       w = 3;
       stroke(192);
@@ -73,6 +72,7 @@ class Hand {
       handLog = 2;
       break;
     case 0:  //Nodata
+    case 1:  //HandState_NotTracked
       /*d = 20;
       w = 7;
       stroke(255, 0, 0);
