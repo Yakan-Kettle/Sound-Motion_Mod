@@ -15,6 +15,11 @@ class Hand {
     handLog = new IntList();  //手の状態遷移を保存するリスト
   }
   
+  void setXY(float _x, float _y) {
+    x = _x;
+    y = _y;
+  }
+  
   float getX() {
     return x;
   }
@@ -39,8 +44,9 @@ class Hand {
   }
   
   void drawHandState(KJoint _joint) {
+    setXY(_joint.getX(), _joint.getY());
     handState(_joint.getState());
-    drawHandMarker(_joint.getX(), _joint.getY(), d, w);
+    drawHandMarker(d, w);
   }
   
   void handState(int handState) {
@@ -51,7 +57,6 @@ class Hand {
     switch(handState) {
     case 3:  //HandState_Closed
     case 4:  //HandState_Lasso
-    case 0:  //Nodata
       d = 20;
       w = 5;
       stroke(255);
@@ -64,13 +69,19 @@ class Hand {
       stroke(192);
       openClose = false;
       break;
+    case 0:  //Nodata
+      d = 20;
+      w = 7;
+      stroke(255, 0, 0);
+      openClose = false;
+      break;
     }
   }
   
-  void drawHandMarker(float _x, float _y, int _d, int _w) {
+  void drawHandMarker(int _d, int _w) {
     //update(_x, _y);
     strokeWeight(_w); 
-    ellipse(_x, _y, _d, _d);  //pushMatrix()しなくてもプログラム的に問題はないが精度が悪くなってる説
+    ellipse(x, y, _d, _d);  //pushMatrix()しなくてもプログラム的に問題はないが精度が悪くなってる説
   }
   /*
   void update(float _x, float _y) {

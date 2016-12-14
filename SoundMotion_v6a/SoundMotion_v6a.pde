@@ -105,7 +105,9 @@ void draw() {
     eitherHand = false;
   } else if (hand == false) trigger = false;*/
   
-  if(rightHand.checkGraped(x, y, r)) trigger = true;
+  if(rightHand.checkGraped(x, y, r) || 
+     leftHand.checkGraped(x, y, r)) trigger = true;
+  else trigger = false;
 
   ballAction(trigger);
   contract();  //中心の円が徐々に縮む
