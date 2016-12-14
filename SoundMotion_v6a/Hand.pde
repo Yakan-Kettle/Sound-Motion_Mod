@@ -4,7 +4,7 @@ class Hand {
   private boolean catching;
   private boolean openClose;
   private int either;
-  private IntList handLog;
+  private int handLog;
   
   private int d;
   private int w;
@@ -12,7 +12,8 @@ class Hand {
   Hand (int _either) {
     openClose = false;
     either = _either; //右手か左手かを識別する。0が右、1が左。
-    handLog = new IntList();  //手の状態遷移を保存するリスト
+    //handLog = new IntList();  //手の状態遷移を保存するリスト
+    handLog = 1;
   }
   
   void setXY(float _x, float _y) {
@@ -61,6 +62,7 @@ class Hand {
       w = 5;
       stroke(255);
       openClose = true;
+      handLog = 3;
       break;
     case 2:  //HandState_Open
     case 1:  //HandState_NotTracked
@@ -68,12 +70,15 @@ class Hand {
       w = 3;
       stroke(192);
       openClose = false;
+      handLog = 2;
       break;
     case 0:  //Nodata
-      d = 20;
+      /*d = 20;
       w = 7;
       stroke(255, 0, 0);
       openClose = false;
+      */
+      handState(handLog);
       break;
     }
   }
