@@ -83,7 +83,7 @@ void setup() {
 
 void draw() {
   fade(0);
-
+  /*
   ArrayList<KSkeleton> skeletonArray = kinect.getSkeletonColorMap();  //こいつはどうやらここにいないとダメらしい
   for (int i = 0; i < skeletonArray.size(); i++) {
     KSkeleton skeleton = (KSkeleton) skeletonArray.get(i);
@@ -94,7 +94,7 @@ void draw() {
       leftHand.drawHandState(joints[KinectPV2.JointType_HandLeft]);
     }
   }
-
+  */
   /*if (hand == true && 
     sq(x-rightHand.getX()) + sq(y-rightHand.getY()) < sq(r)) {
     trigger = true;
@@ -110,6 +110,18 @@ void draw() {
   else trigger = false;
 
   ballAction(trigger);
+  
+  ArrayList<KSkeleton> skeletonArray = kinect.getSkeletonColorMap();  //こいつはどうやらここにいないとダメらしい
+  for (int i = 0; i < skeletonArray.size(); i++) {
+    KSkeleton skeleton = (KSkeleton) skeletonArray.get(i);
+    if(skeleton.isTracked()) {
+      KJoint[] joints = skeleton.getJoints();
+  
+      rightHand.drawHandState(joints[KinectPV2.JointType_HandRight]);
+      leftHand.drawHandState(joints[KinectPV2.JointType_HandLeft]);
+    }
+  }
+  
   contract();  //中心の円が徐々に縮む
 
   noStroke();
@@ -126,8 +138,8 @@ float setValue(int a, int b) {
   while (abs(X) <= 5) X = random(a, b); //5以上がセットされないように頑張ってくれるはず
   return X;
 }
-/*
-boolean checkHitHand() {
+
+/*boolean checkHitHand() {
   return true;
 }*/
 /*

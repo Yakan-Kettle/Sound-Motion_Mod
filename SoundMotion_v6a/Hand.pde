@@ -10,6 +10,8 @@ class Hand {
   private int w;
   
   Hand (int _either) {
+    x = 0;
+    y = 0;
     openClose = false;
     either = _either; //右手か左手かを識別する。0が右、1が左。
     //handLog = new IntList();  //手の状態遷移を保存するリスト
