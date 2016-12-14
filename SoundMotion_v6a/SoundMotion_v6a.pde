@@ -201,6 +201,7 @@ void ballDrift() {
   y += ty;
 
   //壁にぶつかったら変位を逆転させ、最小速度より大きい速度の場合は減速させる
+  //ここの跳ね返り判定がガバ
   if (x+r > width) {  //右
     if (tx < mintx) tx = mintx;
     if (tx > mintx) tx *= 0.9;
