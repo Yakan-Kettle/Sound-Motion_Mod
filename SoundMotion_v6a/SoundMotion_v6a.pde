@@ -83,7 +83,7 @@ void setup() {
 
 void draw() {
   fade(0);
-  /*
+  
   ArrayList<KSkeleton> skeletonArray = kinect.getSkeletonColorMap();  //こいつはどうやらここにいないとダメらしい
   for (int i = 0; i < skeletonArray.size(); i++) {
     KSkeleton skeleton = (KSkeleton) skeletonArray.get(i);
@@ -94,7 +94,7 @@ void draw() {
       leftHand.drawHandState(joints[KinectPV2.JointType_HandLeft]);
     }
   }
-  */
+  
   /*if (hand == true && 
     sq(x-rightHand.getX()) + sq(y-rightHand.getY()) < sq(r)) {
     trigger = true;
@@ -110,17 +110,6 @@ void draw() {
   else trigger = false;
 
   ballAction(trigger);
-  
-  ArrayList<KSkeleton> skeletonArray = kinect.getSkeletonColorMap();  //こいつはどうやらここにいないとダメらしい
-  for (int i = 0; i < skeletonArray.size(); i++) {
-    KSkeleton skeleton = (KSkeleton) skeletonArray.get(i);
-    if(skeleton.isTracked()) {
-      KJoint[] joints = skeleton.getJoints();
-  
-      rightHand.drawHandState(joints[KinectPV2.JointType_HandRight]);
-      leftHand.drawHandState(joints[KinectPV2.JointType_HandLeft]);
-    }
-  }
   
   contract();  //中心の円が徐々に縮む
 
@@ -279,18 +268,23 @@ void simpleEffect(boolean _trigger) {
     ellipse(x, y, 2*r, 2*r);  //中心の円
     if (checkScale()) {  //音階が変化したら
       r = 200;  //中心の円を巨大化
-      setNote();
+      setNote();  //波形を生み出すためのクラスを生成
+      for (i = 0; i < notes.size(); i++) {
+        Note wave = notes.get(i);  //i番目のnoteを取得
+        wave.soundWave(r);  //これに円の半径を渡して、音波を描画
+        if (r + wave.getWid() >= width) notes.remove(i);  //音波が画面より大きいnoteを無理矢理削除してメモリ確保
+      }
       piano.get(colorID).play();
     }
 
     noFill();
     stroke(200, alpha);
     strokeWeight(2);
-    for (i = 0; i < notes.size(); i++) {
+    /*for (i = 0; i < notes.size(); i++) {
       notes.get(i).setXY(positionX, positionY);
       ellipse(notes.get(i).x, notes.get(i).y, r+notes.get(i).elwid, r+notes.get(i).elwid);  //徐々に広がる灰色の円
       notes.get(i).reload();
-    }  //オブジェクト指向が頭から抜けまくってたマン
+    }  //オブジェクト指向が頭から抜けまくってたマン*/
 
     noFill();
   }
@@ -317,7 +311,7 @@ boolean checkScale() {
 }
 
 void setNote() {
-  Note note = new Note(x, y, 1);
+  Note note = new Note(x, y);
   notes.add(note);
 }
 
