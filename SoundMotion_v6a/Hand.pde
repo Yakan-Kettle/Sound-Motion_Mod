@@ -13,7 +13,7 @@ class Hand {
     openClose = false;
     either = _either; //右手か左手かを識別する。0が右、1が左。
     //handLog = new IntList();  //手の状態遷移を保存するリスト
-    handLog = 1;
+    handLog = 2;
   }
   
   void setXY(float _x, float _y) {
