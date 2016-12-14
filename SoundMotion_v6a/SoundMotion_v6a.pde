@@ -205,24 +205,28 @@ void ballDrift() {
   if (x+r > width) {  //右
     if (tx < mintx) tx = mintx;
     if (tx > mintx) tx *= 0.9;
+    x = width - r - 1;
     tx = -abs(tx);
     drums.get(0).play();
   }
   if (x-r < 0) {  //左
     if (abs(tx) < abs(mintx)) tx = -mintx;
     if (abs(tx) > abs(mintx)) tx *= 0.9;
+    x = r + 1;
     tx = abs(tx);
     drums.get(1).play();
   }
   if (y+r > height) {  //下
     if (ty < minty) ty = minty;
     if (ty > minty) ty *= 0.9;
+    y = height - r - 1;
     ty = -abs(ty);
     drums.get(2).play();
   }
   if (y-r < 0) {  //上
     if (abs(ty) < abs(minty)) ty = -minty;
     if (abs(ty) > abs(minty)) ty *= 0.9;
+    y = r + 1;
     ty = abs(ty);
     drums.get(3).play();
   }
