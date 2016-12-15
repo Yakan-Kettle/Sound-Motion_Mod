@@ -2,13 +2,11 @@ class Note {
   private float x;
   private float y;
   private int elwid;  //ellipse width
-  private int alfa;  //color alfa
 
   Note (float _x, float _y) {
     x = _x;
     y = _y;
     elwid = 10;
-    alfa = 200;
   }
 
   float getX() {
