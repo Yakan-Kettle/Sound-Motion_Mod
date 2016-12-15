@@ -42,6 +42,7 @@ int pos = 0; //現在のボールの中心座標を一瞬記録する
 ArrayList<Integer> temp;  //ボールの中心座標を保持する配列 <- ボールを投げたときの速度を計算する時に使う
 ArrayList<Note> notes;
 boolean trigger = false; //ballActionのモード切り替えスイッチ
+//boolean eitherHand;
 
 SoundFile player; // = AudioPlayer player;?
 ArrayList<SoundFile> piano;  // = ArrayList<AudioPlayer> piano = new ArrayList<AudioPlayer>();
@@ -67,8 +68,14 @@ void setup() {
   drums = new ArrayList<SoundFile>();
 
   //ボールの初期座標をセット
+  //x = round(setValue(r, width)); //返り値を四捨五入.切り上げはceil(value).
+  //y = round(setValue(r, height)); //返り値を四捨五入.切り捨てはfloor(value).
   x = round(width * 0.5);
   y = round(height * 0.5);
+
+  //ボールの漂う速度をセット
+  //tx = round(setValue(-t, t));
+  //ty = round(setValue(-t, t));
 
   //ArrayListに初期値をセット
   for (i = 0; i < 2; i++) temp.add(0);
@@ -89,6 +96,16 @@ void draw() {
       leftHand.drawHandState(joints[KinectPV2.JointType_HandLeft]);
     }
   }
+  
+  /*if (hand == true && 
+    sq(x-rightHand.getX()) + sq(y-rightHand.getY()) < sq(r)) {
+    trigger = true;
+    eitherHand = true;
+  } else if (hand == true &&
+    sq(x-leftHand.getX()) + sq(y-leftHand.getY()) < sq(r)) {
+    trigger = true;
+    eitherHand = false;
+  } else if (hand == false) trigger = false;*/
   
   if(rightHand.checkGraped(x, y, r) || 
      leftHand.checkGraped(x, y, r)) trigger = true;
@@ -112,6 +129,66 @@ float setValue(int a, int b) {
   while (abs(X) <= 5) X = random(a, b); //5以上がセットされないように頑張ってくれるはず
   return X;
 }
+
+/*boolean checkHitHand() {
+  return true;
+}*/
+/*
+void drawHandState(KJoint joint, int either) {
+  handState(joint.getState());
+  if (either < 1)rightHand.drawHandMarker(joint.getX(), joint.getY(), d, w, hand);
+  else leftHand.drawHandMarker(joint.getX(), joint.getY(), d, w, hand);
+}
+
+void handState(int handState) {
+  //println(handState);
+  //if(either == KinectPV2.JointType_HandRight) changeHand(handState, handLogR);
+  //else changeHand(handState, handLogL);
+  
+  switch(handState) {
+  case KinectPV2.HandState_Closed:
+  case KinectPV2.HandState_Lasso:
+    d = 20;
+    w = 5;
+    stroke(255);
+    hand = true;
+    break;
+  case KinectPV2.HandState_Open:
+  case KinectPV2.HandState_NotTracked:
+    d = 10;
+    w = 3;
+    stroke(192);
+    hand = false;
+    break;
+  }
+}*/
+
+/*void changeHand(int handState, IntList handLog) {
+  if (hand == false) {
+    if (handState==KinectPV2.HandState_Closed) {
+      handLog = new IntList();
+      hand=true;
+    }
+  } else {
+    if (handState==KinectPV2.HandState_Closed) {
+      handLog = new IntList();
+    } else {
+      handLog.add(1, handState);
+      while (handLog.size()>4) {
+        int size = handLog.size();
+        handLog.remove(size);
+      }
+      int count=0;
+      for (int i=0; i<handLog.size(); i++) {
+        if (handLog.get(i)==KinectPV2.HandState_Open) count++;
+      }
+      if (count>2) {
+        //手を開いたときの処理
+        hand=false;
+      }
+    }
+  }
+}*/
 
 void ballAction(boolean trigger) {
   if (trigger) {
@@ -167,6 +244,9 @@ void ballGrab() {
     positionY = leftHand.getY();
   }
   
+  //x = round(map(positionX, 0, width, 0, width*1.3));  //positionXを 0 ~ width から0 ~ width:1.3 の座標系に適するように変換
+  //y = round(map(positionY, 0, width, 0, width*1.3));
+
   x = round(positionX);
   y = round(positionY);
   
@@ -200,6 +280,11 @@ void simpleEffect(boolean _trigger) {
     noFill();
     stroke(200, alpha);
     strokeWeight(2);
+    /*for (i = 0; i < notes.size(); i++) {
+      notes.get(i).setXY(positionX, positionY);
+      ellipse(notes.get(i).x, notes.get(i).y, r+notes.get(i).elwid, r+notes.get(i).elwid);  //徐々に広がる灰色の円
+      notes.get(i).reload();
+    }  //オブジェクト指向が頭から抜けまくってたマン*/
     for (i = 0; i < notes.size(); i++) {
       Note wave = notes.get(i);  //i番目のnoteを取得
       wave.soundWave(r);  //これに円の半径を渡して、音波を描画
