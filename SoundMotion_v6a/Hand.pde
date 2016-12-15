@@ -87,6 +87,8 @@ class Hand {
   
   void drawHandMarker(int _d, int _w) {
     //update(_x, _y);
+    x = round(map(x, 0, width, 0, width*1.3));  //positionXを 0 ~ width から0 ~ width:1.3 の座標系に適するように変換
+    y = round(map(y, 0, width, 0, width*1.3));
     strokeWeight(_w); 
     ellipse(x, y, _d, _d);  //pushMatrix()しなくてもプログラム的に問題はないが精度が悪くなってる説
   }

@@ -39,10 +39,10 @@ int[][] colorData = {  //色情報
 };
 
 int pos = 0; //現在のボールの中心座標を一瞬記録する
-ArrayList<Integer> temp;  //ボールの中心座標を保持する配列
+ArrayList<Integer> temp;  //ボールの中心座標を保持する配列 <- ボールを投げたときの速度を計算する時に使う
 ArrayList<Note> notes;
 boolean trigger = false; //ballActionのモード切り替えスイッチ
-boolean eitherHand;
+//boolean eitherHand;
 
 SoundFile player; // = AudioPlayer player;?
 ArrayList<SoundFile> piano;  // = ArrayList<AudioPlayer> piano = new ArrayList<AudioPlayer>();
@@ -68,12 +68,14 @@ void setup() {
   drums = new ArrayList<SoundFile>();
 
   //ボールの初期座標をセット
-  x = round(setValue(r, width)); //返り値を四捨五入.切り上げはceil(value).
-  y = round(setValue(r, height)); //返り値を四捨五入.切り捨てはfloor(value).
+  //x = round(setValue(r, width)); //返り値を四捨五入.切り上げはceil(value).
+  //y = round(setValue(r, height)); //返り値を四捨五入.切り捨てはfloor(value).
+  x = round(width * 0.5);
+  y = round(height * 0.5);
 
   //ボールの漂う速度をセット
-  tx = round(setValue(-t, t));
-  ty = round(setValue(-t, t));
+  //tx = round(setValue(-t, t));
+  //ty = round(setValue(-t, t));
 
   //ArrayListに初期値をセット
   for (i = 0; i < 2; i++) temp.add(0);
