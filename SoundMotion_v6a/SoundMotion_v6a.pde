@@ -241,10 +241,13 @@ void ballGrab() {
     positionX = leftHand.getX();
     positionY = leftHand.getY();
   }
+  
+  //x = round(map(positionX, 0, width, 0, width*1.3));  //positionXを 0 ~ width から0 ~ width:1.3 の座標系に適するように変換
+  //y = round(map(positionY, 0, width, 0, width*1.3));
 
   x = round(positionX);
   y = round(positionY);
-
+  
   pos = 1000*x + y;  //ボールの中心座標をひとつの数で記憶する魔法（？）
 
   if (temp.size() >= 3) temp.remove(0);
@@ -269,11 +272,6 @@ void simpleEffect(boolean _trigger) {
     if (checkScale()) {  //音階が変化したら
       r = 200;  //中心の円を巨大化
       setNote();  //波形を生み出すためのクラスを生成
-      for (i = 0; i < notes.size(); i++) {
-        Note wave = notes.get(i);  //i番目のnoteを取得
-        wave.soundWave(r);  //これに円の半径を渡して、音波を描画
-        if (r + wave.getWid() >= width) notes.remove(i);  //音波が画面より大きいnoteを無理矢理削除してメモリ確保
-      }
       piano.get(colorID).play();
     }
 
@@ -285,6 +283,11 @@ void simpleEffect(boolean _trigger) {
       ellipse(notes.get(i).x, notes.get(i).y, r+notes.get(i).elwid, r+notes.get(i).elwid);  //徐々に広がる灰色の円
       notes.get(i).reload();
     }  //オブジェクト指向が頭から抜けまくってたマン*/
+    for (i = 0; i < notes.size(); i++) {
+      Note wave = notes.get(i);  //i番目のnoteを取得
+      wave.soundWave(r);  //これに円の半径を渡して、音波を描画
+      if (r + wave.getWid() >= width) notes.remove(i);  //音波が画面より大きいnoteを無理矢理削除してメモリ確保
+    }
 
     noFill();
   }
