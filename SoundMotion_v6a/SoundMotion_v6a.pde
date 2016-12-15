@@ -270,12 +270,12 @@ void simpleEffect(boolean _trigger) {
     stroke(255);  //メインでnoStroke()しているが、ここでも必要な様子
     setColor();
     fill(colorData[colorID][0], colorData[colorID][1], colorData[colorID][2], alpha);
-    ellipse(x, y, 2*r, 2*r);  //中心の円
     if (checkScale()) {  //音階が変化したら
       r = 200;  //中心の円を巨大化
       setNote();  //波形を生み出すためのクラスを生成
       piano.get(colorID).play();
     }
+    ellipse(x, y, 2*r, 2*r);  //中心の円
 
     noFill();
     stroke(200, alpha);
