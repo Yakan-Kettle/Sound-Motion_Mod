@@ -1,3 +1,5 @@
+//座標系のO軸を中心に変換して、それに合わせて演算を全修正
+//tx,tyによってドラムの音量を可変させる
 import processing.sound.*;
 import KinectPV2.KJoint;
 import KinectPV2.*;
