@@ -30,7 +30,8 @@ int[][] colorData = {  //色情報
 };
 
 void setup() {
-  size(1920, 1080);
+  fullScreen(2);
+  //size(1920, 1080);
   audioInit();  //音声ファイルの取り込み
 
   //キネクト初期化？
