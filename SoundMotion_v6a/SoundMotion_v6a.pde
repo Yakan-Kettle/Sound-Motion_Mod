@@ -103,8 +103,8 @@ void draw() {
   ellipse(x, y, 2*r, 2*r);
   simpleEffect(trigger);  //簡易版
   
-  fill(255, 0, 0);
-  text(frameRate, 50, 50);
+  //fill(255, 0, 0);
+  //text(frameRate, 50, 50);
 }
 
 float setValue(int a, int b) {
