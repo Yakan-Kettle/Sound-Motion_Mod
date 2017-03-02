@@ -93,14 +93,14 @@ class Hand {
     switch(handState) {
     case 3:  //HandState_Closed
     case 4:  //HandState_Lasso
-      d = 30;
+      d = 15;
       w = 7;
       stroke(255);
       open = true;
       handLog = 3;
       break;
     case 2:  //HandState_Open
-      d = 10;
+      d = 30;
       w = 3;
       stroke(172);
       open = false;

@@ -25,6 +25,7 @@ float _y = 0; //ボールを掴んだ手のy座標
 int d = 10; //手のマーカーの直径
 int w = 3; //マーカーの太さ
 //int either = 0; //ボールを掴んだ手が右か左か  （よくよく考えたら、いら）ないです。
+boolean catching = false;
 
 int alpha = 150; //簡易版エフェクトで使う
 int elwid = 10;
@@ -98,7 +99,7 @@ void draw() {
   }
   */
   
-  //checkGraped(x, y, r);
+  checkGraped(x, y, r);
   
   /*
   if(rightHand.checkGraped(x, y, r) || 
@@ -106,7 +107,7 @@ void draw() {
   else trigger = false;
   */
 
-  ballAction(checkGraped(x, y, r)); //こ↑こ↓でhandsの中身を全参照するのでアルゴリズム的には絶対大丈夫なはずだがエラーが出るかもしれない。
+  ballAction(catching); //こ↑こ↓でhandsの中身を全参照するのでアルゴリズム的には絶対大丈夫なはずだがエラーが出るかもしれない。
   
   contract();  //中心の円が徐々に縮む
 
@@ -148,7 +149,7 @@ void setHandPosition() {
   }
 }
 
-boolean checkGraped(int x, int y, int r) {
+void checkGraped(int x, int y, int r) {
   for(Hand hand : hands) {
     if (hand.openClose[0] == true && 
         sq(x-hand.HandRight[0]) + sq(y-hand.HandRight[1]) < sq(r)) {
@@ -156,18 +157,18 @@ boolean checkGraped(int x, int y, int r) {
         //either = 0;  //右手で掴んだ
         _x = hand.HandRight[0];
         _y = hand.HandRight[1];
-        return true;
+        catching = true;
     } else if(hand.openClose[1] == true && 
         sq(x-hand.HandLeft[0]) + sq(y-hand.HandLeft[1]) < sq(r)) {
         //catching = true;
         //either = 1;  //左手で掴んだ
         _x = hand.HandLeft[0];
         _y = hand.HandLeft[1];
-        return true;
+        catching = true;
     } else {
       //catching = false;
       //either = -1;  //変なバグ防止
-      return false;
+      catching =  false;
     }
   }
 }
