@@ -4,9 +4,8 @@ import KinectPV2.*;
 
 KinectPV2 kinect;
 boolean hand;  //手の状態をセットする
-ArrayList<Hand> hands = new ArrayList<Hand>();
-//Hand rightHand;  //右手の諸々の情報
-//Hand leftHand;  //左手の諸々の情報
+Hand rightHand;  //右手の諸々の情報
+Hand leftHand;  //左手の諸々の情報
 
 int i = 0;  //カウンター
 int ir = 100;  //ボール半径の基本値
@@ -20,12 +19,8 @@ int x = 0; //ボールのx座標
 int y = 0; //ボールのy座標
 float positionX = 0;
 float positionY = 0;
-float _x = 0; //ボールを掴んだ手のx座標
-float _y = 0; //ボールを掴んだ手のy座標
 int d = 10; //手のマーカーの直径
 int w = 3; //マーカーの太さ
-//int either = 0; //ボールを掴んだ手が右か左か  （よくよく考えたら、いら）ないです。
-boolean catching = false;
 
 int alpha = 150; //簡易版エフェクトで使う
 int elwid = 10;
@@ -63,8 +58,8 @@ void setup() {
   kinect.enableColorImg(true);
   kinect.init();
   
-  //rightHand = new Hand(0);
-  //leftHand = new Hand(1);
+  rightHand = new Hand(0);
+  leftHand = new Hand(1);
 
   temp = new ArrayList<Integer>();
   notes = new ArrayList<Note>();
@@ -84,9 +79,6 @@ void setup() {
 void draw() {
   fade(0);
   
-  setHandPosition();
-  
-  /*
   ArrayList<KSkeleton> skeletonArray = kinect.getSkeletonColorMap();  //こいつはどうやらここにいないとダメらしい
   for (int i = 0; i < skeletonArray.size(); i++) {
     KSkeleton skeleton = (KSkeleton) skeletonArray.get(i);
@@ -97,80 +89,22 @@ void draw() {
       leftHand.drawHandState(joints[KinectPV2.JointType_HandLeft]);
     }
   }
-  */
   
-  checkGraped(x, y, r);
-  
-  /*
   if(rightHand.checkGraped(x, y, r) || 
      leftHand.checkGraped(x, y, r)) trigger = true;
   else trigger = false;
-  */
 
-  ballAction(catching); //こ↑こ↓でhandsの中身を全参照するのでアルゴリズム的には絶対大丈夫なはずだがエラーが出るかもしれない。
+  ballAction(trigger);
   
   contract();  //中心の円が徐々に縮む
 
   noStroke();
   fill(255);
   ellipse(x, y, 2*r, 2*r);
-  simpleEffect(catching);  //簡易版
+  simpleEffect(trigger);  //簡易版
   
   //fill(255, 0, 0);
   //text(frameRate, 50, 50);
-}
-
-void setHandPosition() {
-  ArrayList<KSkeleton> skeletonArray = kinect.getSkeletonColorMap();  //こいつはどうやらここにいないとダメらしい
-  
-  int i;
-  for (i = 0; i < skeletonArray.size(); i++) {
-    KSkeleton skeleton = (KSkeleton) skeletonArray.get(i);
-    if(skeleton.isTracked()) {
-      KJoint[] joints = skeleton.getJoints();
-      
-      Hand hand = new Hand(joints[KinectPV2.JointType_HandRight].getX(),
-                          joints[KinectPV2.JointType_HandRight].getY(),
-                          joints[KinectPV2.JointType_HandLeft].getX(),
-                          joints[KinectPV2.JointType_HandLeft].getY(),
-                          joints[KinectPV2.JointType_HandRight].getState(),
-                          joints[KinectPV2.JointType_HandLeft].getState()
-                          );
-      if(hands.size() == i) hands.add(hand);
-      else hands.set(i, hand);
-      
-      hand.drawHandState();
-      //rightHand.drawHandState(joints[KinectPV2.JointType_HandRight]);
-      //leftHand.drawHandState(joints[KinectPV2.JointType_HandLeft]);
-    }
-  }
-  for(; i < hands.size(); i++) {
-    hands.remove(i);
-  }
-}
-
-void checkGraped(int x, int y, int r) {
-  for(Hand hand : hands) {
-    if (hand.openClose[0] == true && 
-        sq(x-hand.HandRight[0]) + sq(y-hand.HandRight[1]) < sq(r)) {
-        //catching = true;  //こ↑れ↓いる？
-        //either = 0;  //右手で掴んだ
-        _x = hand.HandRight[0];
-        _y = hand.HandRight[1];
-        catching = true;
-    } else if(hand.openClose[1] == true && 
-        sq(x-hand.HandLeft[0]) + sq(y-hand.HandLeft[1]) < sq(r)) {
-        //catching = true;
-        //either = 1;  //左手で掴んだ
-        _x = hand.HandLeft[0];
-        _y = hand.HandLeft[1];
-        catching = true;
-    } else {
-      //catching = false;
-      //either = -1;  //変なバグ防止
-      catching =  false;
-    }
-  }
 }
 
 float setValue(int a, int b) {
@@ -225,9 +159,6 @@ void ballDrift() {
 }
 
 void ballGrab() {
-  positionX = _x;
-  positionY = _y;  //こ↑れ↓いる？
-  /*
   if (rightHand.catching) {
     positionX = rightHand.getX();
     positionY = rightHand.getY();
@@ -235,10 +166,9 @@ void ballGrab() {
     positionX = leftHand.getX();
     positionY = leftHand.getY();
   }
-  */
   
   x = round(positionX);
-  y = round(positionY);  //ここで四捨五入するために使うのでいりますいります（食い気味）
+  y = round(positionY);
   
   pos = 1000*x + y;  //ボールの中心座標をひとつの数で記憶する魔法（？）
 

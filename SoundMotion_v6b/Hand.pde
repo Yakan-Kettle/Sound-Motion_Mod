@@ -5,7 +5,7 @@ class Hand {
   private int[] HandMarker = new int[4];
   //private float x;
   //private float y;
-  private boolean catching;
+  //private boolean catching;
   private boolean open;
   private boolean[] openClose = new boolean[2];
   //private int either;
