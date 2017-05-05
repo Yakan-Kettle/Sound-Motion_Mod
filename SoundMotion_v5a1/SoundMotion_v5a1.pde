@@ -8,6 +8,10 @@ int lineColor = 255;  //ラインの色（暫定版）
 
 int X = 0;  //タイムコードの位置
 
+int r = 30;   //◯の大きさ
+int ec = 150; //◯の色
+int ew = 3;   //◯の太さ
+
 KinectPV2 kinect;
 //部位の位置情報（x, y）を格納する変数
 ArrayList<Body> bodys = new ArrayList<Body>();  //kinectの最大人数が6人のはず
@@ -102,14 +106,14 @@ void fillColor(int mode, int id, int _alpha) {
 
 //５つの部位の箇所に○を描く
 void drawBody(ArrayList<Body> _bodys) {
-  stroke(100);//部位に描く○の色
-  strokeWeight(1);//○の線の太さ
+  stroke(ec);//部位に描く○の色
+  strokeWeight(ew);//○の線の太さ
   for (Body body : _bodys) {
-    ellipse(body.getHead()[0], body.getHead()[1], 10, 10);
-    ellipse(body.getHandRight()[0], body.getHandRight()[1], 10, 10);
-    ellipse(body.getHandLeft()[0], body.getHandLeft()[1], 10, 10);
-    ellipse(body.getFootRight()[0], body.getFootRight()[1], 10, 10);
-    ellipse(body.getFootLeft()[0], body.getFootLeft()[1], 10, 10);
+    ellipse(body.getHead()[0], body.getHead()[1], r, r);
+    ellipse(body.getHandRight()[0], body.getHandRight()[1], r, r);
+    ellipse(body.getHandLeft()[0], body.getHandLeft()[1], r, r);
+    ellipse(body.getFootRight()[0], body.getFootRight()[1], r, r);
+    ellipse(body.getFootLeft()[0], body.getFootLeft()[1], r, r);
   }
 }
 
